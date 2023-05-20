@@ -51,6 +51,7 @@ private:
     size_t balance_;
     std::vector<Card> deck;
     std::map<size_t, Player> players;
+    size_t deck_value(std::vector<Card> player_deck);
     friend std::ostream& operator<<(std::ostream&, const BlackjackGame&);
 };
 

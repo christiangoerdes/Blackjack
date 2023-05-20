@@ -40,6 +40,8 @@ class BlackjackGame{
 
     private:
 
+    
+
     void fill_deck(){
         deck.clear(); // empty deck
         std::vector<char> suits{'C','S','D','H'}; // clubs, spades, diamonds and hearts
@@ -62,9 +64,36 @@ class BlackjackGame{
         char suit_;
         size_t value_;
     };
+
     struct Player {
         std::vector<Card> player_deck;
     };
+
+    size_t deck_value(std::vector<Card> player_deck){
+        size_t total_deck_value;
+        size_t num_aces = 0;
+
+        for (const Card& card : player_deck){
+            if (card.value_ > 1){ // sum up all regular cards
+                total_deck_value += card.value_;
+            }
+            else { // determine number of aces in the player's deck
+                num_aces += 1;
+            }
+        }
+
+        if (num_aces > 0){
+            if (total_deck_value + 11 + (num_aces-1) <= 21){ // if it is profitable to count one ace as having value 11
+                total_deck_value += 11 + (num_aces-1);
+            }
+            else {
+                total_deck_value += num_aces; // otherwise count all aces as having value 1
+            }
+        }
+
+        return total_deck_value;
+    }
+
     size_t balance_;
     std::vector<Card> deck;
     std::map<size_t, Player> players;
