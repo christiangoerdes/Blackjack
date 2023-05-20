@@ -4,6 +4,8 @@
 #include <vector>
 #include <iostream>
 #include <map>
+#include <algorithm>
+#include <random>
 
 namespace Blackjack {
 
@@ -43,6 +45,7 @@ public:
   
 
 private:
+    void fill_deck();
     struct Card;
     struct Player;
     size_t balance_;

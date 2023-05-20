@@ -21,12 +21,12 @@ class BlackjackGame{
     }
 
     bool add_card(const size_t player_id){
-        if (deck.size() > 0) {
+        if (deck.size() > 0) { // if there are still cards left in the deck
             players[player_id].player_deck.push_back(deck.back());
             deck.pop_back();
         }
         else {
-            return false;
+            return false; // no cards left to distribute
         }
     }
 
@@ -40,7 +40,28 @@ class BlackjackGame{
 
     private:
 
-    struct Card;
+    void fill_deck(){
+        deck.clear(); // empty deck
+        std::vector<char> suits{'C','S','D','H'}; // clubs, spades, diamonds and hearts
+
+        for (const char& suit : suits) {
+            for (size_t value = 1; value < 11; value++){
+                deck.push_back(Card(suit, value));
+            }
+        }
+
+        auto rng = std::default_random_engine {};
+        std::shuffle(std::begin(deck), std::end(deck), rng); // shuffle the deck
+    }
+
+    struct Card{
+        Card(char suit, size_t value){
+            suit_ = suit;
+            value_ = value;
+        }
+        char suit_;
+        size_t value_;
+    };
     struct Player {
         std::vector<Card> player_deck;
     };
