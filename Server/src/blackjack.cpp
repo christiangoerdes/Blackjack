@@ -44,7 +44,7 @@ public:
         return true;
     }
 
-    bool determine_winners(){
+    bool determine_winners(){ // determine winners in final game state
 
         if (game_state != 4){ // if not all of the turns have been made yet
             return false;
@@ -70,7 +70,6 @@ public:
         return true;
     }
 
-
     /**
      * @brief Places bet of player whose turn it is
      * @param name Name of the players
@@ -95,45 +94,62 @@ public:
                 game_state = 2; // change game mode to "drawing cards"
 
                 for (Player& player : players){ // hand each player (and the dealer) two cards from the deck
+
                     player.player_deck_.push_back(deck.back()); // first card
                     deck.pop_back();
                     player.player_deck_.push_back(deck.back()); // second card
                     deck.pop_back();
-                    // TODO: make player leave game if reaches 21... also, how do I split this operation up into substeps for the animation?
+
+                    if (deck_value(player.player_deck_) == 21){
+                        player.balance_ += player.bet_*2; // player wins twice their bet
+                        players[dealer_id_].balance_ -= player.bet_*2; // dealer loses twice the player's bet
+                        player.in_round_ = false; // player leaves the round
+                    }
+
                 }
 
                 turn_ = next_player_id(); // determine first player to draw cards
+                if (turn_ == -1){ // if all players have won immediately after the first two cards
+                    game_state = 0; // round is over
+                }
             }
 
             return true;
         }
     }
 
-
     bool add_card(const std::string name, const std::string password){ // adds a card to a player's or the dealer's deck
 
         if (game_state == 2){ // if the game state is "players drawing cards"
             Player& current_player = players[turn_];
             if (current_player.name_ == name && current_player.password_ == password) { // check credentials
-                current_player.player_deck_.push_back(deck.back());
+                current_player.player_deck_.push_back(deck.back()); // add card to player's deck
                 deck.pop_back();
 
                 size_t player_deck_value = deck_value(current_player.player_deck_); // determine the current player's deck value
 
                 if (player_deck_value >= 21){
+
+                    current_player.in_round_ = false; // player leaves the round
+
                     if (player_deck_value == 21){
-                        current_player.in_round_ = false; // player leaves the round
                         current_player.balance_ += current_player.bet_*2; // player wins twice their bet
                         players[dealer_id_].balance_ -= current_player.bet_*2; // dealer loses twice the current player's bet
                     }
                     else {
-                        current_player.in_round_ = false; // players leaves the round
                         current_player.balance_ -= current_player.bet_; // player busts (loses their bet)
                         players[dealer_id_].balance_ += current_player.bet_; // dealer gets the current player's bet
                     }
-                    turn_ = next_player_id(); // automatic skipping if player leaves the round
+
+                    turn_ = next_player_id(); // automatic skipping due to leaving the round
+
                     if (turn_ == -1){ // if all players have skipped
-                        game_state = 3; // it is the dealer's turn now
+                        if (next_player_id() != -1){ // if there are any players left in the round (not all players have won already)
+                            game_state = 3; // it is the dealer's turn now
+                        }
+                        else {
+                            game_state = 4; // if all players have won after drawing cards
+                        }
                     }
                 }
                 return true; // drawing successful
