@@ -1,6 +1,8 @@
 #pragma once
 
 #include <blackjack.hpp>
+#include <iostream>
+#include <random>
 
 namespace Blackjack {
 
@@ -16,13 +18,29 @@ class BlackjackGame{
         balance_ = balance;
     }
 
-    bool place_bet(const size_t player_id, const size_t balance){
+    bool start_round(){
+        if (game_state != 0 && players.size() < 2){   // if game not already running and at least two players are present
+            return false;
+        }
 
+        std::random_device rd; // obtain a random number from hardware
+        std::mt19937 gen(rd()); // seed the generator
+        std::uniform_int_distribution<> distr(0, players.size()-1); // define the range
+
+        size_t dealer_id = distr(gen);  // determine dealer randomly
+        players[dealer_id].dealer_ = true;
+
+        game_state = 1; // set state to 1 (placing bets)
+        return true;
     }
 
-    bool add_card(const size_t player_id){
+    bool place_bet(const size_t player_id, const size_t bet, const std::string password){ // player places bet
+        players[player_id].bet_ = bet;
+    }
+
+    bool add_card(const size_t player_id, const std::string password){
         if (deck.size() > 0) { // if there are still cards left in the deck
-            players[player_id].player_deck.push_back(deck.back());
+            players[player_id].player_deck_.push_back(deck.back());
             deck.pop_back();
         }
         else {
@@ -30,19 +48,17 @@ class BlackjackGame{
         }
     }
 
-    void join(const size_t player_id){
+    void skip(size_t player_id, const std::string password) const{
 
     }
 
-    void leave(const size_t player_id){
-
+    bool join(const std::string name, const std::string password){ // adds a new player to the game
+        players.push_back(Player(name, password, balance_));
     }
 
     private:
 
-    
-
-    void fill_deck(){
+    void fill_deck(){ // fills the game deck
         deck.clear(); // empty deck
         std::vector<char> suits{'C','S','D','H'}; // clubs, spades, diamonds and hearts
 
@@ -66,10 +82,21 @@ class BlackjackGame{
     };
 
     struct Player {
-        std::vector<Card> player_deck;
+        Player(std::string name, std::string password, size_t balance){
+            balance_ = balance;
+            name_ = name;
+            password_ = password;
+            dealer_ = false;
+        }
+        std::vector<Card> player_deck_;
+        std::string name_;
+        std::string password_;
+        size_t balance_;
+        size_t bet_;
+        bool dealer_;
     };
 
-    size_t deck_value(std::vector<Card> player_deck){
+    size_t deck_value(const std::vector<Card>& player_deck) const{ // computes the value of a player's deck
         size_t total_deck_value;
         size_t num_aces = 0;
 
@@ -93,10 +120,11 @@ class BlackjackGame{
 
         return total_deck_value;
     }
-
+    size_t game_state; // 0: not started; 1: placing bets; 2: ...
     size_t balance_;
+    size_t turn;
     std::vector<Card> deck;
-    std::map<size_t, Player> players;
+    std::vector<Player> players;
     friend std::ostream& operator<<(std::ostream&, const BlackjackGame&);
 
 };
