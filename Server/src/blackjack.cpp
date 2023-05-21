@@ -31,11 +31,42 @@ class BlackjackGame{
         players[dealer_id].dealer_ = true;
 
         game_state = 1; // set state to 1 (placing bets)
+        if (dealer_id != 0){ // the dealer places no bets
+            turn_ = 0;
+        }
+        else {
+            turn_ = 1;
+        }
         return true;
     }
 
-    bool place_bet(const size_t player_id, const size_t bet, const std::string password){ // player places bet
-        players[player_id].bet_ = bet;
+    bool place_bet(const std::string name, const std::string password, const size_t bet){ // player places bet
+
+        Player& current_better = players[turn_];
+
+        if (game_state == 1){   // if all bets have not been placed already
+            if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET) { // if it is the player's turn and the bet is not below the minimum bet
+                current_better.bet_ = bet;
+
+                turn_++;
+                if (turn_ >= players.size()){ // if all players have placed their bets
+                    game_state = 2;
+                    turn_ = 0;
+                }
+                else {
+                    if (players[turn_].dealer_){ // if the next player in the list is the dealer
+                        turn_++;
+                        if (turn_ >= players.size()){ // if the dealer was the last better
+                            game_state = 2;
+                            turn_ = 0;
+                        }
+                    }
+                }
+                return true;
+                
+            }
+        }
+        return false;
     }
 
     bool add_card(const size_t player_id, const std::string password){
@@ -87,6 +118,7 @@ class BlackjackGame{
             name_ = name;
             password_ = password;
             dealer_ = false;
+            bet_ = 0;
         }
         std::vector<Card> player_deck_;
         std::string name_;
@@ -122,9 +154,10 @@ class BlackjackGame{
     }
     size_t game_state; // 0: not started; 1: placing bets; 2: ...
     size_t balance_;
-    size_t turn;
+    size_t turn_;
     std::vector<Card> deck;
     std::vector<Player> players;
+    const size_t MIN_BET = 5;
     friend std::ostream& operator<<(std::ostream&, const BlackjackGame&);
 
 };
