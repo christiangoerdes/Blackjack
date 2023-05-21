@@ -13,12 +13,14 @@ public:
     BlackjackGame(){
         balance_ = 1000;
         game_state = 0;
+        dealer_id_ = 0;
         players = std::vector<Player>();
     }
 
     BlackjackGame(const size_t balance){
         balance_ = balance;
         game_state = 0;
+        dealer_id_ = 0;
         players = std::vector<Player>();
     }
 
@@ -44,7 +46,7 @@ public:
 
     bool determine_winners(){
 
-        if (game_state != 4){
+        if (game_state != 4){ // if not all of the turns have been made yet
             return false;
         }
 
@@ -64,11 +66,18 @@ public:
                 }
             }
         }
-
+        game_state = 0; // set game mode to "not started"
         return true;
-
     }
 
+
+    /**
+     * @brief Places bet of player whose turn it is
+     * @param name Name of the players
+     * @param password Player's password
+     * @param bet Size of the bet (in dollars, integers)
+     * @return Feedback about whether the placing operation was successful (as bool)
+    */
     bool place_bet(const std::string name, const std::string password, const size_t bet){ // player places bet
 
         if (game_state != 1){   // if the game state is not "placing bets"
@@ -77,15 +86,29 @@ public:
 
         Player& current_better = players[turn_];
         if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET) { // if it is the player's turn and the bet is not below the minimum bet
-            current_better.bet_ = bet;
+
+            current_better.bet_ = bet; // save the bet
             turn_ = next_player_id(); // assign next player to place a bet
+
             if (turn_ == -1){ // if all players have placed their bets
+
                 game_state = 2; // change game mode to "drawing cards"
+
+                for (Player& player : players){ // hand each player (and the dealer) two cards from the deck
+                    player.player_deck_.push_back(deck.back()); // first card
+                    deck.pop_back();
+                    player.player_deck_.push_back(deck.back()); // second card
+                    deck.pop_back();
+                    // TODO: make player leave game if reaches 21... also, how do I split this operation up into substeps for the animation?
+                }
+
                 turn_ = next_player_id(); // determine first player to draw cards
             }
+
             return true;
         }
     }
+
 
     bool add_card(const std::string name, const std::string password){ // adds a card to a player's or the dealer's deck
 
@@ -148,7 +171,7 @@ public:
     }
 
     bool join(const std::string name, const std::string password){ // adds a new player to the game
-
+        // TODO: perhaps exclude possibility of same-name players
         if (game_state != 0){
             return false; // cannot join running game
         }
@@ -160,7 +183,14 @@ public:
         if (game_state != 0){
             return false; // cannot leave running game
         }
-        // WIP
+        for (size_t player_idx = 0; player_idx < players.size(); player_idx++){
+            Player& player = players[player_idx];
+            if (player.name_ == name && player.password_ == password){ // check credentials
+                players.erase(players.begin() + player_idx); // remove the player from the list of players
+                return true;
+            }
+        }
+        return false;
     }
 
 private:
