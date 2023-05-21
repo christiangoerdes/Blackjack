@@ -84,6 +84,7 @@ public:
         }
 
         Player& current_better = players[turn_];
+        // TODO: check balance
         if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET) { // if it is the player's turn and the bet is not below the minimum bet
 
             current_better.bet_ = bet; // save the bet
