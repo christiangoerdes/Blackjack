@@ -117,6 +117,7 @@ public:
 
             return true;
         }
+        return false;
     }
 
     bool add_card(const std::string name, const std::string password){ // adds a card to a player's or the dealer's deck
