@@ -49,6 +49,7 @@ private:
     struct Card;
     struct Player;
     size_t balance_;
+    size_t dealer_id_;
     std::vector<Card> deck;
     std::map<size_t, Player> players;
     size_t deck_value(std::vector<Card> player_deck);

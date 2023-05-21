@@ -44,22 +44,45 @@ class BlackjackGame{
 
         Player& current_better = players[turn_];
 
-        if (game_state == 1){   // if all bets have not been placed already
+        if (game_state == 1){   // if not all bets have been placed already
             if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET) { // if it is the player's turn and the bet is not below the minimum bet
                 current_better.bet_ = bet;
-
-                turn_++;
-                if (turn_ >= players.size()){ // if all players have placed their bets
+                turn_ = next_player_id(); // assign next player to place a bet
+                if (turn_ == -1){ // if all players have placed their bets
                     game_state = 2;
                     turn_ = 0;
                 }
-                else {
-                    if (players[turn_].dealer_){ // if the next player in the list is the dealer
-                        turn_++;
-                        if (turn_ >= players.size()){ // if the dealer was the last better
-                            game_state = 2;
-                            turn_ = 0;
-                        }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool add_card(const std::string name, const std::string password){
+
+
+        Player& current_player = players[turn_];
+
+        if (game_state == 2){ // TODO: add game_state == 3 for the dealer's additions
+            if (current_player.name_ == name && current_player.password_ == password) { // if it is the player's turn
+                current_player.player_deck_.push_back(deck.back());
+                deck.pop_back();
+
+                size_t player_deck_value = deck_value(current_player.player_deck_);
+                if (player_deck_value >= 21){
+                    if (player_deck_value == 21){
+                        current_player.in_round_ = false; // players leaves the round
+                        current_player.balance_ += current_player.bet_; // player wins twice their bet
+                        players[dealer_id_].balance_ -= current_player.bet_; // does this work this way? what if the dealer goes bankrupt?
+                    }
+                    else {
+                        current_player.in_round_ = false; // players leaves the round
+                        current_player.balance_ -= current_player.bet_; // player busts
+                        players[dealer_id_].balance_ += current_player.bet_;
+                    }
+                    turn_ = next_player_id();
+                    if (turn_ == -1){ // if all players have skipped
+                        game_state = 3; // it is the dealer's turn now
                     }
                 }
                 return true;
@@ -69,22 +92,24 @@ class BlackjackGame{
         return false;
     }
 
-    bool add_card(const size_t player_id, const std::string password){
-        if (deck.size() > 0) { // if there are still cards left in the deck
-            players[player_id].player_deck_.push_back(deck.back());
-            deck.pop_back();
+    void skip(const std::string name, const std::string password){
+        Player& current_player = players[turn_];
+        if (game_state == 2){
+            if (current_player.name_ == name && current_player.password_ == password) { // if it is the player's turn
+                turn_ = next_player_id(); // determine next player
+                if (turn_ == -1){ // if all players have skipped
+                    game_state = 3; // it is the dealer's turn now
+                }
+            }
         }
-        else {
-            return false; // no cards left to distribute
-        }
-    }
-
-    void skip(size_t player_id, const std::string password) const{
-
     }
 
     bool join(const std::string name, const std::string password){ // adds a new player to the game
-        players.push_back(Player(name, password, balance_));
+        if (game_state == 0){ // TODO: perhaps should check if such a player already exists
+            players.push_back(Player(name, password, balance_));
+            return true;
+        }
+        return false;
     }
 
     private:
@@ -119,12 +144,14 @@ class BlackjackGame{
             password_ = password;
             dealer_ = false;
             bet_ = 0;
+            in_round_ = true;
         }
         std::vector<Card> player_deck_;
         std::string name_;
         std::string password_;
         size_t balance_;
         size_t bet_;
+        bool in_round_;
         bool dealer_;
     };
 
@@ -155,8 +182,23 @@ class BlackjackGame{
     size_t game_state; // 0: not started; 1: placing bets; 2: ...
     size_t balance_;
     size_t turn_;
+    size_t dealer_id_;
     std::vector<Card> deck;
     std::vector<Player> players;
+
+    size_t next_player_id(){
+        size_t turn = turn_;
+        while (turn < deck.size()){
+            if (!players[turn].dealer_ && players[turn].in_round_){
+                return turn;
+            }
+            else {
+                turn++;
+            }
+        }
+        return -1; // if there are no more players with turns to make
+    }
+
     const size_t MIN_BET = 5;
     friend std::ostream& operator<<(std::ostream&, const BlackjackGame&);
 
