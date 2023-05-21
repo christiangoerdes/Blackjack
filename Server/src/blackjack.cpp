@@ -29,18 +29,11 @@ public:
             return false;
         }
 
-        fill_deck(); // fill the game deck
-        players[dealer_id_].dealer_ = false; // unassign dealer position from previous round
-        std::random_device rd; // obtain a random number from hardware
-        std::mt19937 gen(rd()); // seed the generator
-        std::uniform_int_distribution<> distr(0, players.size()-1); // define the range
-
-        size_t dealer_id = distr(gen);  // determine dealer randomly
-        players[dealer_id].dealer_ = true;
+        fill_deck(); // fill and shuffle the game deck
+        assign_dealer(); // determine the dealer
 
         game_state = 1; // set state to 1 (placing bets)
-        turn_ = -1;
-        turn_ = next_player_id(); // determine the first player to place a bet
+        turn_ = next_player_id(-1); // determine the first player to place a bet
         return true;
     }
 
@@ -84,33 +77,23 @@ public:
         }
 
         Player& current_better = players[turn_];
-        if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET) { // if it is the player's turn and the bet is not below the minimum bet
+
+        if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET && bet >= current_better.balance_) { // check credentials and bet validity
 
             current_better.bet_ = bet; // save the bet
-            turn_ = next_player_id(); // assign next player to place a bet
+            turn_ = next_player_id(turn_); // assign next player to place a bet
 
             if (turn_ == -1){ // if all players have placed their bets
 
                 game_state = 2; // change game mode to "drawing cards"
 
                 for (Player& player : players){ // hand each player (and the dealer) two cards from the deck
-
-                    player.player_deck_.push_back(deck.back()); // first card
-                    deck.pop_back();
-                    player.player_deck_.push_back(deck.back()); // second card
-                    deck.pop_back();
-
-                    if (deck_value(player.player_deck_) == 21){
-                        player.balance_ += player.bet_*2; // player wins twice their bet
-                        players[dealer_id_].balance_ -= player.bet_*2; // dealer loses twice the player's bet
-                        player.in_round_ = false; // player leaves the round
-                    }
-
+                    hand_card(player); // first card
+                    hand_card(player); // second card
                 }
 
-                turn_ = next_player_id(); // determine first player to draw cards
-                if (turn_ == -1){ // if all players have won immediately after the first two cards
-                    game_state = 0; // round is over
+                if (!players_left_in_round()){ // if all players have won after the first two cards
+                    game_state = 0;
                 }
             }
 
@@ -121,37 +104,23 @@ public:
     bool add_card(const std::string name, const std::string password){ // adds a card to a player's or the dealer's deck
 
         if (game_state == 2){ // if the game state is "players drawing cards"
+
             Player& current_player = players[turn_];
+
             if (current_player.name_ == name && current_player.password_ == password) { // check credentials
-                current_player.player_deck_.push_back(deck.back()); // add card to player's deck
-                deck.pop_back();
 
-                size_t player_deck_value = deck_value(current_player.player_deck_); // determine the current player's deck value
+                hand_card(current_player);
 
-                if (player_deck_value >= 21){
+                if (players_left_in_round()){ // if there are any players who have not won or bust
 
-                    current_player.in_round_ = false; // player leaves the round
-
-                    if (player_deck_value == 21){
-                        current_player.balance_ += current_player.bet_*2; // player wins twice their bet
-                        players[dealer_id_].balance_ -= current_player.bet_*2; // dealer loses twice the current player's bet
-                    }
-                    else {
-                        current_player.balance_ -= current_player.bet_; // player busts (loses their bet)
-                        players[dealer_id_].balance_ += current_player.bet_; // dealer gets the current player's bet
+                    if (!current_player.in_round_){ // if the current player has won or bust after receiving the card
+                        
+                        //WIP: die korrekten Übergänge einbauen
+                        
                     }
 
-                    turn_ = next_player_id(); // automatic skipping due to leaving the round
+            }
 
-                    if (turn_ == -1){ // if all players have skipped
-                        if (next_player_id() != -1){ // if there are any players left in the round (not all players have won already)
-                            game_state = 3; // it is the dealer's turn now
-                        }
-                        else {
-                            game_state = 4; // if all players have won after drawing cards
-                        }
-                    }
-                }
                 return true; // drawing successful
             }
         }
@@ -255,6 +224,40 @@ private:
         bool dealer_;
     };
 
+    void hand_card(Player& player){
+        Player& dealer = players[dealer_id_];
+
+        player.player_deck_.push_back(deck.back());
+        deck.pop_back();
+
+        if (deck_value(player.player_deck_) == 21){
+            player.balance_ += player.bet_*2; // player wins twice their bet
+            players[dealer_id_].balance_ -= player.bet_*2; // dealer loses twice the player's bet
+            player.in_round_ = false; // player leaves the round
+        }
+        else if (deck_value(player.player_deck_) > 21){ // bust
+            player.balance_ -= player.bet_;
+            dealer.balance_ += player.bet_;
+            player.in_round_ = false;
+        }
+
+    }
+
+    bool players_left_in_round(){
+        size_t turn = next_player_id();
+        return turn != -1;
+    }
+
+    void assign_dealer(){
+        players[dealer_id_].dealer_ = false; // unassign dealer position from previous round
+        std::random_device rd; // obtain a random number from hardware
+        std::mt19937 gen(rd()); // seed the generator
+        std::uniform_int_distribution<> distr(0, players.size()-1); // define the range
+
+        size_t dealer_id = distr(gen);  // determine dealer randomly
+        players[dealer_id].dealer_ = true;
+    }
+
     size_t deck_value(const std::vector<Card>& player_deck) const{ // computes the value of a player's deck
         size_t total_deck_value;
         size_t num_aces = 0;
@@ -292,21 +295,20 @@ private:
     std::vector<Card> deck;
     std::vector<Player> players;
 
-    size_t next_player_id(){ // determines the id of the next player
-        size_t turn = turn_;
-        turn++;
+    size_t next_player_id(const size_t current_player_idx){ // determines the id of the next player
+        
+        size_t idx = current_player_idx+1;
 
-        while (turn < deck.size()){
-            if (!players[turn].dealer_ && players[turn].in_round_){
-                return turn;
+        while (idx < deck.size()){
+            if (!players[idx].dealer_ && players[idx].in_round_){
+                return idx;
             }
             else {
-                turn++;
+                idx++;
             }
         }
         return -1; // if there are no more players with turns to make
     }
-
 
     friend std::ostream& operator<<(std::ostream&, const BlackjackGame&);
 
