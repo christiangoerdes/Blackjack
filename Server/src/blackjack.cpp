@@ -8,7 +8,7 @@ namespace Blackjack {
 
 class BlackjackGame{
 
-    public:
+public:
 
     BlackjackGame(){
         balance_ = 1000;
@@ -27,6 +27,7 @@ class BlackjackGame{
             return false;
         }
 
+        fill_deck(); // fill the game deck
         players[dealer_id_].dealer_ = false; // unassign dealer position from previous round
         std::random_device rd; // obtain a random number from hardware
         std::mt19937 gen(rd()); // seed the generator
@@ -104,35 +105,49 @@ class BlackjackGame{
         return false;
     }
 
-    void skip(const std::string name, const std::string password){
+    bool skip(const std::string name, const std::string password){ // lets a player skip their turn drawing cards
+
+        if (game_state != 2){
+            return false;
+        }
+
         Player& current_player = players[turn_];
-        if (game_state == 2){
-            if (current_player.name_ == name && current_player.password_ == password) { // if it is the player's turn
-                turn_ = next_player_id(); // determine next player
-                if (turn_ == -1){ // if all players have skipped
-                    game_state = 3; // it is the dealer's turn now
-                }
+        if (current_player.name_ == name && current_player.password_ == password) { // if it is the player's turn
+            turn_ = next_player_id(); // determine next player
+            if (turn_ == -1){ // if all players have skipped
+                game_state = 3; // it is the dealer's turn now
             }
         }
     }
 
     bool join(const std::string name, const std::string password){ // adds a new player to the game
-        if (game_state == 0){ // TODO: perhaps should check if such a player already exists
-            players.push_back(Player(name, password, balance_));
-            return true;
+
+        if (game_state != 0){
+            return false; // cannot join running game
         }
-        return false;
+        players.push_back(Player(name, password, balance_));
+        return true;
     }
 
-    private:
+    bool leave(const std::string name, const std::string password){ // player leaves the game
+        if (game_state != 0){
+            return false; // cannot leave running game
+        }
+        // WIP
+    }
 
-    void fill_deck(){ // fills the game deck
+private:
+
+    size_t MIN_BET = 5;
+    const std::vector<std::string> card_types{"2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "Q", "K"}; // 13 types of cardes
+    const std::vector<char> suits{'C','S','D','H'}; // 4 types of suits: clubs, spades, diamonds and hearts
+
+    void fill_deck(){ // fills the game deck - TODO: add J, Q, K card functionality
         deck.clear(); // empty deck
-        std::vector<char> suits{'C','S','D','H'}; // clubs, spades, diamonds and hearts
-
+        
         for (const char& suit : suits) {
-            for (size_t value = 1; value < 11; value++){
-                deck.push_back(Card(suit, value));
+            for (const std::string& type : card_types){
+                deck.push_back(Card(suit, type));
             }
         }
 
@@ -140,13 +155,13 @@ class BlackjackGame{
         std::shuffle(std::begin(deck), std::end(deck), rng); // shuffle the deck
     }
 
-    struct Card{ // TODO: modify to include type (as string probably) - also modify deck_value to work with types rather than values
-        Card(char suit, size_t value){
+    struct Card{
+        Card(const char suit, const std::string& type){
             suit_ = suit;
-            value_ = value;
+            type_ = type;
         }
         char suit_;
-        size_t value_;
+        std::string type_;
     };
 
     struct Player {
@@ -172,10 +187,16 @@ class BlackjackGame{
         size_t num_aces = 0;
 
         for (const Card& card : player_deck){
-            if (card.value_ > 1){ // sum up all regular cards
-                total_deck_value += card.value_;
+
+            if (card.type_ != "A"){ // sum up all regular cards
+                if (card.type_ != "J" && card.type_ != "Q" && card.type_ != "K"){
+                    total_deck_value += std::stoi(card.type_);
+                }
+                else {
+                    total_deck_value += 10; // J, Q, and K are valued 10 each
+                }
             }
-            else { // determine number of aces in the player's deck
+            else {
                 num_aces += 1;
             }
         }
@@ -213,7 +234,7 @@ class BlackjackGame{
         return -1; // if there are no more players with turns to make
     }
 
-    const size_t MIN_BET = 5;
+
     friend std::ostream& operator<<(std::ostream&, const BlackjackGame&);
 
 };
