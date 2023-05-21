@@ -77,8 +77,7 @@ public:
         }
 
         Player& current_better = players[turn_];
-
-        if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET && bet >= current_better.balance_) { // check credentials and bet validity
+        if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET) { // if it is the player's turn and the bet is not below the minimum bet
 
             current_better.bet_ = bet; // save the bet
             turn_ = next_player_id(turn_); // assign next player to place a bet
@@ -99,6 +98,7 @@ public:
 
             return true;
         }
+        return false;
     }
 
     bool add_card(const std::string name, const std::string password){ // adds a card to a player's or the dealer's deck
