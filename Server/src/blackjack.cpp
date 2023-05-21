@@ -42,6 +42,33 @@ public:
         return true;
     }
 
+    bool determine_winners(){
+
+        if (game_state != 4){
+            return false;
+        }
+
+        Player& dealer = players[dealer_id_];
+        size_t dealer_value = deck_value(dealer.player_deck_);
+
+        for (Player& player : players){
+            size_t player_value = deck_value(player.player_deck_);
+            if (!player.dealer_ && player.in_round_){ // only consider non-dealer players who are still in the round
+                if (dealer_value > 21 || player_value > dealer_value){ // if the dealer busts or the player deck value exceeds the dealer deck value
+                    player.balance_ += player.bet_*2; // player wins twice their bet
+                    dealer.balance_ -= player.bet_*2; // dealer loses twice the player's bet
+                }
+                else if (player_value < dealer_value){ // if the dealer does not bust: compare deck values
+                    player.balance_ -= player.bet_; // player loses their bet
+                    dealer.balance_ += player.bet_; // dealer wins the player's bet
+                }
+            }
+        }
+
+        return true;
+
+    }
+
     bool place_bet(const std::string name, const std::string password, const size_t bet){ // player places bet
 
         if (game_state != 1){   // if the game state is not "placing bets"
@@ -142,7 +169,7 @@ private:
     const std::vector<std::string> card_types{"2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "Q", "K"}; // 13 types of cardes
     const std::vector<char> suits{'C','S','D','H'}; // 4 types of suits: clubs, spades, diamonds and hearts
 
-    void fill_deck(){ // fills the game deck - TODO: add J, Q, K card functionality
+    void fill_deck(){ // fills the game deck
         deck.clear(); // empty deck
         
         for (const char& suit : suits) {
