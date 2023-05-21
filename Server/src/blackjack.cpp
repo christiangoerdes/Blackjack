@@ -12,17 +12,22 @@ class BlackjackGame{
 
     BlackjackGame(){
         balance_ = 1000;
+        game_state = 0;
+        players = std::vector<Player>();
     }
 
     BlackjackGame(const size_t balance){
         balance_ = balance;
+        game_state = 0;
+        players = std::vector<Player>();
     }
 
-    bool start_round(){
+    bool start_round(){ // start a new round of the game
         if (game_state != 0 && players.size() < 2){   // if game not already running and at least two players are present
             return false;
         }
 
+        players[dealer_id_].dealer_ = false; // unassign dealer position from previous round
         std::random_device rd; // obtain a random number from hardware
         std::mt19937 gen(rd()); // seed the generator
         std::uniform_int_distribution<> distr(0, players.size()-1); // define the range
@@ -31,62 +36,69 @@ class BlackjackGame{
         players[dealer_id].dealer_ = true;
 
         game_state = 1; // set state to 1 (placing bets)
-        if (dealer_id != 0){ // the dealer places no bets
-            turn_ = 0;
-        }
-        else {
-            turn_ = 1;
-        }
+        turn_ = -1;
+        turn_ = next_player_id(); // determine the first player to place a bet
         return true;
     }
 
     bool place_bet(const std::string name, const std::string password, const size_t bet){ // player places bet
 
-        Player& current_better = players[turn_];
-
-        if (game_state == 1){   // if not all bets have been placed already
-            if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET) { // if it is the player's turn and the bet is not below the minimum bet
-                current_better.bet_ = bet;
-                turn_ = next_player_id(); // assign next player to place a bet
-                if (turn_ == -1){ // if all players have placed their bets
-                    game_state = 2;
-                    turn_ = 0;
-                }
-                return true;
-            }
+        if (game_state != 1){   // if the game state is not "placing bets"
+            return false;
         }
-        return false;
+
+        Player& current_better = players[turn_];
+        if (current_better.name_ == name && current_better.password_ == password && bet >= MIN_BET) { // if it is the player's turn and the bet is not below the minimum bet
+            current_better.bet_ = bet;
+            turn_ = next_player_id(); // assign next player to place a bet
+            if (turn_ == -1){ // if all players have placed their bets
+                game_state = 2; // change game mode to "drawing cards"
+                turn_ = next_player_id(); // determine first player to draw cards
+            }
+            return true;
+        }
     }
 
-    bool add_card(const std::string name, const std::string password){
+    bool add_card(const std::string name, const std::string password){ // adds a card to a player's or the dealer's deck
 
-
-        Player& current_player = players[turn_];
-
-        if (game_state == 2){ // TODO: add game_state == 3 for the dealer's additions
-            if (current_player.name_ == name && current_player.password_ == password) { // if it is the player's turn
+        if (game_state == 2){ // if the game state is "players drawing cards"
+            Player& current_player = players[turn_];
+            if (current_player.name_ == name && current_player.password_ == password) { // check credentials
                 current_player.player_deck_.push_back(deck.back());
                 deck.pop_back();
 
-                size_t player_deck_value = deck_value(current_player.player_deck_);
+                size_t player_deck_value = deck_value(current_player.player_deck_); // determine the current player's deck value
+
                 if (player_deck_value >= 21){
                     if (player_deck_value == 21){
-                        current_player.in_round_ = false; // players leaves the round
-                        current_player.balance_ += current_player.bet_; // player wins twice their bet
-                        players[dealer_id_].balance_ -= current_player.bet_; // does this work this way? what if the dealer goes bankrupt?
+                        current_player.in_round_ = false; // player leaves the round
+                        current_player.balance_ += current_player.bet_*2; // player wins twice their bet
+                        players[dealer_id_].balance_ -= current_player.bet_*2; // dealer loses twice the current player's bet
                     }
                     else {
                         current_player.in_round_ = false; // players leaves the round
-                        current_player.balance_ -= current_player.bet_; // player busts
-                        players[dealer_id_].balance_ += current_player.bet_;
+                        current_player.balance_ -= current_player.bet_; // player busts (loses their bet)
+                        players[dealer_id_].balance_ += current_player.bet_; // dealer gets the current player's bet
                     }
-                    turn_ = next_player_id();
+                    turn_ = next_player_id(); // automatic skipping if player leaves the round
                     if (turn_ == -1){ // if all players have skipped
                         game_state = 3; // it is the dealer's turn now
                     }
                 }
-                return true;
-                
+                return true; // drawing successful
+            }
+        }
+        else if (game_state == 3){ // if the game state is "dealer drawing cards"
+            Player& dealer = players[dealer_id_];
+            if (dealer.name_ == name && dealer.password_ == password){ // check credentials
+                dealer.player_deck_.push_back(deck.back());
+                deck.pop_back();
+
+                size_t dealer_deck_value = deck_value(dealer.player_deck_); // determine the dealer's deck value
+                if (dealer_deck_value >= 17){ // if the dealer can draw no more cards
+                    game_state = 4; // enter game state "determine winners"
+                }
+                return true; // drawing successful
             }
         }
         return false;
@@ -128,7 +140,7 @@ class BlackjackGame{
         std::shuffle(std::begin(deck), std::end(deck), rng); // shuffle the deck
     }
 
-    struct Card{
+    struct Card{ // TODO: modify to include type (as string probably) - also modify deck_value to work with types rather than values
         Card(char suit, size_t value){
             suit_ = suit;
             value_ = value;
@@ -186,8 +198,10 @@ class BlackjackGame{
     std::vector<Card> deck;
     std::vector<Player> players;
 
-    size_t next_player_id(){
+    size_t next_player_id(){ // determines the id of the next player
         size_t turn = turn_;
+        turn++;
+
         while (turn < deck.size()){
             if (!players[turn].dealer_ && players[turn].in_round_){
                 return turn;
