@@ -1,60 +1,139 @@
 #pragma once
 
-#include <string>
-#include <vector>
 #include <iostream>
-#include <map>
-#include <algorithm>
 #include <random>
+#include <vector>
+#include <algorithm>
 
 namespace Blackjack {
 
-using letter_t = std::string::value_type;
-  
 class BlackjackGame {
+
 public:
-    /**
-     * @brief Initializes a game of blackjack with default balance of $1000
-    */
+
     BlackjackGame();
+    BlackjackGame(int init_balance);
+
+    /// Game State 0: Not Started
 
     /**
-     * @brief Initializes a game of blackjack with a custom balance (only integers allowed)
-     * @param balance Initial balance (in dollars, only integers allowed)
+     * @brief Starts a new game round
+     * @return Feedback whether call was valid
     */
-    BlackjackGame(const size_t balance);
+    bool start_round();
 
     /**
-     * @brief Place a bet at the start of a game (only integers allowed)
-     * @param bet Bet to be placed (in dollars, only integers allowed)
+     * @brief Adds a new player to the game
+     * @return Feedback whether call was valid
     */
-    bool place_bet(const size_t bet);
+    bool join(std::string name, std::string password);
 
     /**
-     * @brief Add a card to the deck
+     * @brief Player leaves the game
+     * @return Feedback whether call was valid
     */
-    bool add_card(const size_t player_id);
+    bool leave(std::string name, std::string password);
 
+    /// Game State 1: Placing Bets
 
-    void join(const size_t player_id);
+    /**
+     * @brief Places bet of player whose turn it is
+     * @param name Name of the players
+     * @param password Player's password
+     * @param bet Size of the bet (in dollars, integers)
+     * @return Feedback whether call was valid
+    */
+    bool place_bet(std::string name, std::string password, int bet);
+    
+    /**
+     * @brief Current player draws a card
+     * @return Feedback whether call was valid
+    */
+    bool draw(std::string name, std::string password);
 
-    void leave(const size_t player_id);
-
-    std::string game_status();
-
-  
+    /**
+     * @brief Lets players voluntarily skip their turn drawing cards
+     * @return Feedback whether call was valid
+    */
+    bool skip(std::string name, std::string password);
 
 private:
-    void fill_deck();
+    
     struct Card;
     struct Player;
-    size_t balance_;
-    size_t dealer_id_;
-    std::vector<Card> deck;
-    std::map<size_t, Player> players;
-    size_t deck_value(std::vector<Card> player_deck);
-    friend std::ostream& operator<<(std::ostream&, const BlackjackGame&);
+
+    /**
+     * @brief Fills the game deck with all 52 cards in random order
+    */
+    void fill_deck();
+
+    /**
+     * @brief Hands player a card from the game deck
+    */
+    void hand_card(Player& player);
+
+    /**
+     * @brief Computes the value of a player's deck
+     * @return Numerical value of the player's deck
+    */
+    int deck_value(const std::vector<Card>& deck) const;
+
+    /**
+     * @brief Rewards a winning player with twice their bet
+    */
+    void reward(Player& winner);
+
+    /**
+     * @brief Losing player loses their bet
+    */
+    void lose(Player& loser);
+
+    /**
+     * @brief Indicates whether any players are left in the round
+     * @return True iff any players are still in the round
+    */  
+    bool players_left() const;
+
+    /**
+     * @brief Checks whether player has won or lost. Updates turn variable and makes transactions where possible
+    */
+    void check_reward(Player& player);
+
+    /**
+     * @brief Determine id of the next player to make a turn
+     * @return id of next player to make a turn
+    */
+    int next_player() const;
+
+    /**
+     * @brief Dealer draws cards after all players have drawn theirs
+    */
+    void draw_dealer();
+
 };
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

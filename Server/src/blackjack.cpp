@@ -1,8 +1,4 @@
-
-#include <iostream>
-#include <random>
-#include <vector>
-#include <algorithm>
+#include <blackjack.hpp>
 
 namespace Blackjack {
 
@@ -16,19 +12,14 @@ public:
         _players = std::vector<Player>();
     }
 
-    BlackjackGame(const int balance){
-        _init_balance = balance;
+    BlackjackGame(int init_balance){
+        _init_balance = init_balance;
         _game_state = 0;
         _players = std::vector<Player>();
     }
     
-
     /// Game State 0: Not Started
 
-    /**
-     * @brief Starts a new game round
-     * @return Feedback whether call was valid
-    */
     bool start_round() {
 
         if (_game_state != 0 || _players.size() == 0) { // if game already running or no players present
@@ -44,10 +35,6 @@ public:
 
     }
 
-    /**
-     * @brief Adds a new player to the game
-     * @return Feedback whether call was valid
-    */
     bool join(std::string name, std::string password) {
 
         if (_game_state != 0) { // if game already running
@@ -64,10 +51,6 @@ public:
         return true;
     }
 
-    /**
-     * @brief Player leaves the game
-     * @return Feedback whether call was valid
-    */
     bool leave(std::string name, std::string password) {
 
         if (_game_state != 0) { // if game already running
@@ -81,20 +64,11 @@ public:
                 return true;
             }
         }
-
         return false; // if player not in players list
-
     }
 
     /// Game State 1: Placing Bets
-
-    /**
-     * @brief Places bet of player whose turn it is
-     * @param name Name of the players
-     * @param password Player's password
-     * @param bet Size of the bet (in dollars, integers)
-     * @return Feedback whether call was valid
-    */
+ 
     bool place_bet(std::string name, std::string password, int bet) {
 
         if (_game_state != 1) { // if game state not "placing bets"
@@ -141,10 +115,6 @@ public:
 
     /// Game State 2: Drawing Cards
 
-    /**
-     * @brief Current player draws a card
-     * @return Feedback whether call was valid
-    */
     bool draw(std::string name, std::string password) {
 
         if (_game_state != 2) { // if game state is not "drawing cards"
@@ -166,17 +136,10 @@ public:
                 }
 
                 _game_state = 0; // set game state to "not started"
-
             }
-
         }
-
     }
 
-    /**
-     * @brief Lets players voluntarily skip their turn drawing cards
-     * @return Feedback whether call was valid
-    */
     bool skip(std::string name, std::string password) {
 
         if (_game_state != 2) { // if game state is not "drawing cards"
@@ -193,10 +156,7 @@ public:
                 draw_dealer(); // dealer draws their cards
             }
         }
-
     }
-
-
 
 private:
 
@@ -214,13 +174,20 @@ private:
         bool _in_round;
     };
 
-    /**
-     * @brief Fills the game deck with all 52 cards in random order
-    */
+    int _init_balance;
+    int _game_state;
+    int _turn;
+    int _MIN_BET = 5;
+    std::vector<Card> _deck;
+    std::vector<Player> _players;
+    Player dealer;
+    const std::vector<std::string> _card_types{"2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "Q", "K"}; // 13 types of cardes
+    const std::vector<char> _suits{'C','S','D','H'}; // 4 types of suits: clubs, spades, diamonds and hearts
+
     void fill_deck() {
         _deck.clear(); // empty current deck
-        for (const char& suit : _suits){
-            for (const std::string& type : _card_types){
+        for (const char& suit : _suits) {
+            for (const std::string& type : _card_types) {
                 _deck.push_back(Card{suit, type});
             }
         }
@@ -228,20 +195,11 @@ private:
         std::shuffle(std::begin(_deck), std::end(_deck), rng); // shuffle the deck
     }
 
-    /**
-     * @brief Hands player a card from the game deck
-    */
     void hand_card(Player& player) {
         player._deck.push_back(_deck.back());
         _deck.pop_back();
     }
 
-    
-
-    /**
-     * @brief Computes the value of a player's deck
-     * @return Numerical value of the player's deck
-    */
     int deck_value(const std::vector<Card>& deck) const {
         int total_value;
         int num_aces = 0;
@@ -269,31 +227,20 @@ private:
                 total_value += num_aces; // otherwise count all aces as having value 1
             }
         }
-
         return total_value;
     }
 
-    /**
-     * @brief Rewards a winning player with twice their bet
-    */
     void reward(Player& winner) {
         winner._balance += winner._bet*2;
         winner._in_round = false;
     }
 
-    /**
-     * @brief Losing player loses their bet
-    */
     void lose(Player& loser) {
         loser._balance -= loser._bet;
         loser._in_round = false;
     }
 
-    /**
-     * @brief Indicates whether any players are left in the round
-     * @return True iff any players are still in the round
-    */
-    bool players_left() {
+    bool players_left() const{
         for (const Player& player : _players) {
             if (player._in_round) {
                 return true;
@@ -302,9 +249,6 @@ private:
         return false;
     }
 
-    /**
-     * @brief Checks whether player has won or lost. Updates turn variable and makes transactions where possible
-    */
     void check_reward(Player& player) {
         
         int value = deck_value(player._deck);
@@ -322,11 +266,7 @@ private:
         }
     }
 
-    /**
-     * @brief Determine id of the next player to make a turn
-     * @return id of next player to make a turn
-    */
-    int next_player() {
+    int next_player() const {
         int turn = _turn;
         do {
             turn++;
@@ -335,9 +275,6 @@ private:
         return turn;
     }
 
-    /**
-     * @brief Dealer draws cards after all players have drawn theirs
-    */
     void draw_dealer() {
         while (deck_value(dealer._deck) < 17) { // dealer must draw as long as his value is below 17
             hand_card(dealer);
@@ -355,24 +292,9 @@ private:
             else {
                 lose(player);
             }
-
         }
     }
     
-
-    int _init_balance;
-    int _game_state;
-    int _turn;
-    int _MIN_BET = 5;
-    std::vector<Card> _deck;
-    std::vector<Player> _players;
-    Player dealer;
-    const std::vector<std::string> _card_types{"2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "Q", "K"}; // 13 types of cardes
-    const std::vector<char> _suits{'C','S','D','H'}; // 4 types of suits: clubs, spades, diamonds and hearts
-
-
-
 };
-
 
 }
