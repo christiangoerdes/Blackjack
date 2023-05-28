@@ -1,5 +1,7 @@
-#include "../include/blackjack.hpp"
+#include "../src/blackjack.cpp"
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
 #include "../include/json.hpp"
 
 namespace py = pybind11;
