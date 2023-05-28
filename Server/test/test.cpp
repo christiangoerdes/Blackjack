@@ -61,6 +61,7 @@ expectedJson["dealer"]["_in_round"] = false;
 nlohmann::json actualJson = game.to_json();
 ASSERT_EQ(expectedJson, actualJson);
 }
+//TODO fix tests
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
