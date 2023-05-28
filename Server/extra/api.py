@@ -8,9 +8,20 @@ except ImportError as e:
     exit(1)
 
 from blackjack import BlackjackGame
+import os
+from fastapi import FastAPI
+import uvicorn
 
 b = BlackjackGame()
 
-json = b.to_json()
+api = FastAPI
 
-print(json)
+@api.get("/")
+async def root():
+    return {
+        "json: " : b.to_json()
+    }
+
+if __name__ == "__main__":
+    this_python_file = os.path.basename(__file__)[:-3]
+    instance = uvicorn.run(f"{this_python_file}:api", host="127.0.0.1", port=8000, log_level="info", reload=True)
