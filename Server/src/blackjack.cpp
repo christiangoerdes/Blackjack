@@ -2,6 +2,8 @@
 
 namespace Blackjack {
 
+using json = nlohmann::json;
+
 class BlackjackGame {
 
 public:
@@ -160,8 +162,19 @@ public:
 
     json toJson() const {
         json jsonObj;
-        jsonObj["name"] = name;
-        jsonObj["age"] = age;
+        jsonObj["_init_balance"] = _init_balance;
+        jsonObj["_game_state"] = _game_state;
+        jsonObj["_turn"] = _turn;
+        jsonObj["_MIN_BET"] = _MIN_BET;
+        jsonObj["_deck"] = json::array();
+        for (const auto& card : _deck) {
+            jsonObj["_deck"].push_back(card.toJson());
+        }
+        jsonObj["_players"] = json::array();
+        for (const auto& player : _players) {
+            jsonObj["_players"].push_back(player.toJson());
+        }
+        jsonObj["dealer"] = dealer.toJson();
         return jsonObj;
     }
 
@@ -170,6 +183,13 @@ private:
     struct Card {
         char _suit;
         std::string _type;
+
+        json toJson() const {
+            json jsonObj;
+            jsonObj["_suit"] = std::string(1, _suit);
+            jsonObj["_type"] = _type;
+            return jsonObj;
+        }
     };
 
     struct Player {
@@ -179,6 +199,20 @@ private:
         std::vector<Card> _deck;
         int _bet;
         bool _in_round;
+
+        json toJson() const {
+            json jsonObj;
+            jsonObj["_name"] = _name;
+            jsonObj["_password"] = _password;
+            jsonObj["_balance"] = _balance;
+            jsonObj["_deck"] = json::array();
+            for (const auto& card : _deck) {
+                jsonObj["_deck"].push_back(card.toJson());
+            }
+            jsonObj["_bet"] = _bet;
+            jsonObj["_in_round"] = _in_round;
+            return jsonObj;
+        }
     };
 
     int _init_balance;
