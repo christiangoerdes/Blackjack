@@ -4,6 +4,7 @@
 #include <random>
 #include <vector>
 #include <algorithm>
+#include <nlohmann/json.hpp>
 
 namespace Blackjack {
 
@@ -56,6 +57,13 @@ public:
      * @return Feedback whether call was valid
     */
     bool skip(std::string name, std::string password);
+
+
+    /**
+     * @brief Get the Blackjack object as a json
+     * @return json with the current attributes
+     */
+    json toJson() const;
 
 private:
     

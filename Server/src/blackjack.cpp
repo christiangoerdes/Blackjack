@@ -158,6 +158,13 @@ public:
         }
     }
 
+    json toJson() const {
+        json jsonObj;
+        jsonObj["name"] = name;
+        jsonObj["age"] = age;
+        return jsonObj;
+    }
+
 private:
 
     struct Card {
