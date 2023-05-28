@@ -27,20 +27,15 @@ find_package(pybind11 REQUIRED PATHS "${pybind11_DIR}")
 
 ## Baue Programme ##
 
-# Baue das Programm 'demo1' aus den genannten Quelldateien
-file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
-add_executable(demo1
-        examples/demo1.cpp
-        ${SRC_FILES}
-        )
 
-pybind11_add_module(hangman
-        examples/demo_pybind.cpp
+
+pybind11_add_module(blackjack
+        Server/extra/pybind.cpp
         ${SRC_FILES}
         )
 
 ## Installiere die Bibliothek
-install(TARGETS hangman
+install(TARGETS blackjack
         COMPONENT python
         LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/extra")
 
