@@ -16,17 +16,14 @@ set(CMAKE_CXX_STANDARD 17)
 # add_link_options(-fsanitize=address)
 
 # Füge selbsgeschriebene Includes hinzu
-include_directories(include)
+include_directories(Server/include)
 # Füge externe Includes hinzu
-include_directories(external)
+include_directories(Server/external)
 
 set(pybind11_DIR "/home/chrisi/.local/lib/python3.10/site-packages/pybind11/share/cmake/pybind11")
 find_package(pybind11 REQUIRED PATHS "${pybind11_DIR}")
 
-
-
 ## Baue Programme ##
-
 
 
 pybind11_add_module(blackjack
@@ -37,5 +34,5 @@ pybind11_add_module(blackjack
 ## Installiere die Bibliothek
 install(TARGETS blackjack
         COMPONENT python
-        LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/extra")
+        LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/Server/extra")
 

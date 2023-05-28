@@ -4,7 +4,7 @@
 #   python3 -m uvicorn api:api --port 8000  --reload
 
 try:
-   import blackjack
+    import blackjack
 except ImportError as e:
     print(f"Importing the shared library 'blackjack' did not work.")
     print(f"Is (a link to) the shared library 'blackjack.____.so' in the same directory as this python script?")
@@ -21,11 +21,13 @@ b = BlackjackGame()
 
 api = FastAPI
 
+
 @api.get("/")
 async def root():
     return {
-        "json: " : b.to_json()
+        "json: ": b.to_json()
     }
+
 
 if __name__ == "__main__":
     this_python_file = os.path.basename(__file__)[:-3]
