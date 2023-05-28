@@ -63,7 +63,7 @@ public:
      * @brief Get the Blackjack object as a json
      * @return json with the current attributes
      */
-    json toJson() const;
+    json to_json() const;
 
 private:
     
