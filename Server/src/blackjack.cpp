@@ -2,8 +2,6 @@
 
 namespace Blackjack {
 
-using json = nlohmann::json;
-
 class BlackjackGame {
 
 public:
@@ -160,7 +158,7 @@ public:
         }
     }
 
-    json to_json() const {
+    nlohmann::json to_json() const {
         json jsonObj;
         jsonObj["_init_balance"] = _init_balance;
         jsonObj["_game_state"] = _game_state;
@@ -184,7 +182,7 @@ private:
         char _suit;
         std::string _type;
 
-        json toJson() const {
+        nlohmann::json toJson() const {
             json jsonObj;
             jsonObj["_suit"] = std::string(1, _suit);
             jsonObj["_type"] = _type;
@@ -200,7 +198,7 @@ private:
         int _bet;
         bool _in_round;
 
-        json toJson() const {
+        nlohmann::json toJson() const {
             json jsonObj;
             jsonObj["_name"] = _name;
             jsonObj["_password"] = _password;
