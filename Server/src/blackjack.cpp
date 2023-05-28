@@ -160,7 +160,7 @@ public:
         }
     }
 
-    json toJson() const {
+    json to_json() const {
         json jsonObj;
         jsonObj["_init_balance"] = _init_balance;
         jsonObj["_game_state"] = _game_state;
@@ -200,7 +200,7 @@ private:
         int _bet;
         bool _in_round;
 
-        json to_json() const {
+        json toJson() const {
             json jsonObj;
             jsonObj["_name"] = _name;
             jsonObj["_password"] = _password;
