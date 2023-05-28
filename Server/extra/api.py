@@ -7,3 +7,10 @@ except ImportError as e:
     print(f"Exiting")
     exit(1)
 
+from blackjack import BlackjackGame
+
+b = BlackjackGame()
+
+json = b.to_json()
+
+print(json)

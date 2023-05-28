@@ -14,4 +14,5 @@ PYBIND11_MODULE(blackjack, m) {
             .def("place_bet", BlackjackGame::place_bet, "Places bet of player whose turn it is")
             .def("draw", &BlackjackGame::draw, "Current player draws a card")
             .def("skip", &BlackjackGame::skip, "Lets players voluntarily skip their turn drawing cards")
+            .def("to_json", &BlackjackGame::to_json, "Converts Object to json data format")
 }
