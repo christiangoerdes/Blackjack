@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include "json.hpp"
+
 namespace Blackjack {
 
     class BlackjackGame {
@@ -12,6 +13,7 @@ namespace Blackjack {
     public:
 
         BlackjackGame();
+
         BlackjackGame(int init_balance);
 
         /// Game State 0: Not Started
@@ -77,23 +79,23 @@ namespace Blackjack {
         /**
          * @brief Hands player a card from the game deck
         */
-        void hand_card(Player& player);
+        void hand_card(Player &player);
 
         /**
          * @brief Computes the value of a player's deck
          * @return Numerical value of the player's deck
         */
-        int deck_value(const std::vector<Card>& deck) const;
+        int deck_value(const std::vector<Card> &deck) const;
 
         /**
          * @brief Rewards a winning player with twice their bet
         */
-        void reward(Player& winner);
+        void reward(Player &winner);
 
         /**
          * @brief Losing player loses their bet
         */
-        void lose(Player& loser);
+        void lose(Player &loser);
 
         /**
          * @brief Indicates whether any players are left in the round
@@ -104,7 +106,7 @@ namespace Blackjack {
         /**
          * @brief Checks whether player has won or lost. Updates turn variable and makes transactions where possible
         */
-        void check_reward(Player& player);
+        void check_reward(Player &player);
 
         /**
          * @brief Determine id of the next player to make a turn
@@ -119,4 +121,5 @@ namespace Blackjack {
 
     };
 
+}
 }
