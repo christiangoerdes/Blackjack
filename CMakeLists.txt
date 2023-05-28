@@ -37,4 +37,40 @@ install(TARGETS blackjack
         LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/Server/extra")
 
 
+#----------------------------------------------#
+#----------Download and use GoogleTest---------#
+#----------------------------------------------#
+
+# Use CMakes FetchContent
+include(FetchContent)
+# Workaround for CMake >= 3.24
+# Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+    cmake_policy(SET CMP0135 NEW)
+endif()
+
+# Download GoogleTest (we use version 1.12.1)
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+# Workaround for Windows:
+# Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+# Include CMake configuration of GoogleTest
+FetchContent_MakeAvailable(googletest)
+include(GoogleTest)
+
+# Enable GoogleTest
+enable_testing()
+
+#----------------------------------------------#
+#-------------Erzeuge Testprogramme------------#
+#----------------------------------------------#
+
+# Declare test program blackjack_test
+add_executable(blackjack_test Server/test/test.cpp)
+target_link_libraries(blackjack_test GTest::gtest_main)
+gtest_discover_tests(blackjack_test)
 
