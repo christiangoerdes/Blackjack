@@ -4,8 +4,7 @@
 #include <random>
 #include <vector>
 #include <algorithm>
-#include <nlohmann/json.hpp>
-
+#include "json.hpp"
 namespace Blackjack {
 
 class BlackjackGame {
