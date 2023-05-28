@@ -1,3 +1,7 @@
+# Run with
+#   uvicorn api:api --port 8000 --reload
+# or, if uvicorn is not in PATH, run as
+#   python3 -m uvicorn api:api --port 8000  --reload
 
 try:
     import blackjack
@@ -12,7 +16,6 @@ import os
 from fastapi import FastAPI
 import uvicorn
 from blackjack import BlackjackGame
-refactoring
 
 
 b = BlackjackGame()
