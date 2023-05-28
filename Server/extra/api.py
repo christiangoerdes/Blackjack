@@ -1,5 +1,10 @@
+# Run with
+#   uvicorn api:api --port 8000 --reload
+# or, if uvicorn is not in PATH, run as
+#   python3 -m uvicorn api:api --port 8000  --reload
+
 try:
-    import blackjack
+   import blackjack
 except ImportError as e:
     print(f"Importing the shared library 'blackjack' did not work.")
     print(f"Is (a link to) the shared library 'blackjack.____.so' in the same directory as this python script?")
