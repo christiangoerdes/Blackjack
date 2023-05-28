@@ -16,7 +16,7 @@ set(CMAKE_CXX_STANDARD 17)
 # add_link_options(-fsanitize=address)
 
 # Füge selbsgeschriebene Includes hinzu
-include_directories(Server/include)
+include_directories(Server/src)
 # Füge externe Includes hinzu
 include_directories(Server/external)
 
@@ -35,4 +35,6 @@ pybind11_add_module(blackjack
 install(TARGETS blackjack
         COMPONENT python
         LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/Server/extra")
+
+
 
