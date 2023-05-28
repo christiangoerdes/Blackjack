@@ -200,7 +200,7 @@ private:
         int _bet;
         bool _in_round;
 
-        json toJson() const {
+        json to_json() const {
             json jsonObj;
             jsonObj["_name"] = _name;
             jsonObj["_password"] = _password;
