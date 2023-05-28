@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <../include/blackjack.hpp>
+#include "../src/blackjack.cpp"
 
 using namespace Blackjack;
 
