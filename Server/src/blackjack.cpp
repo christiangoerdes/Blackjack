@@ -1,4 +1,10 @@
-#include <blackjack.hpp>
+//#include <blackjack.hpp>
+
+#include <iostream>
+#include <random>
+#include <vector>
+#include <algorithm>
+#include "../include/json.hpp"
 
 namespace Blackjack {
 
@@ -159,16 +165,16 @@ public:
     }
 
     nlohmann::json to_json() const {
-        json jsonObj;
+        nlohmann::json jsonObj;
         jsonObj["_init_balance"] = _init_balance;
         jsonObj["_game_state"] = _game_state;
         jsonObj["_turn"] = _turn;
         jsonObj["_MIN_BET"] = _MIN_BET;
-        jsonObj["_deck"] = json::array();
+        jsonObj["_deck"] = nlohmann::json::array();
         for (const auto& card : _deck) {
             jsonObj["_deck"].push_back(card.toJson());
         }
-        jsonObj["_players"] = json::array();
+        jsonObj["_players"] = nlohmann::json::array();
         for (const auto& player : _players) {
             jsonObj["_players"].push_back(player.toJson());
         }
@@ -183,7 +189,7 @@ private:
         std::string _type;
 
         nlohmann::json toJson() const {
-            json jsonObj;
+            nlohmann::json jsonObj;
             jsonObj["_suit"] = std::string(1, _suit);
             jsonObj["_type"] = _type;
             return jsonObj;
@@ -199,11 +205,11 @@ private:
         bool _in_round;
 
         nlohmann::json toJson() const {
-            json jsonObj;
+            nlohmann::json jsonObj;
             jsonObj["_name"] = _name;
             jsonObj["_password"] = _password;
             jsonObj["_balance"] = _balance;
-            jsonObj["_deck"] = json::array();
+            jsonObj["_deck"] = nlohmann::json::array();
             for (const auto& card : _deck) {
                 jsonObj["_deck"].push_back(card.toJson());
             }
