@@ -1,7 +1,3 @@
-# Run with
-#   uvicorn api:api --port 8000 --reload
-# or, if uvicorn is not in PATH, run as
-#   python3 -m uvicorn api:api --port 8000  --reload
 
 try:
     import blackjack
@@ -12,20 +8,22 @@ except ImportError as e:
     print(f"Exiting")
     exit(1)
 
-from blackjack import BlackjackGame
 import os
 from fastapi import FastAPI
 import uvicorn
+from blackjack import BlackjackGame
+refactoring
+
 
 b = BlackjackGame()
 
-api = FastAPI
+api = FastAPI()
 
 
 @api.get("/")
 async def root():
     return {
-        "json: ": b.to_json()
+        "json": b.to_json()
     }
 
 
