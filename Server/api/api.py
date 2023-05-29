@@ -58,6 +58,13 @@ async def root():
         "dealer": dealer_obj
     }
 
+@api.get("/start_round")
+async def start_round():
+    b.start_round()
+    return {
+        "status": b.getGameState()
+    }
+
 
 @api.get("/foo")
 async def get_player():
