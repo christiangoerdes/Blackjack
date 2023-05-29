@@ -16,4 +16,5 @@ Um die API zu starten, muss einer der beiden folgenden Commands im Server/extra 
 
     uvicorn api:api --port 8000 --reload
 \
+
     python3 -m uvicorn api:api --port 8000  --reload
