@@ -63,11 +63,10 @@ def get_deck_for_player(player):
 
 
 def get_dealer():
-    dealer_obj = {
+    return {
         "deck": get_deck_for_player(b.getDealer()),
         "deck_value": b.getDealer()._deck_value
     }
-    return dealer_obj
 
 
 # Game State 0: Not Started
