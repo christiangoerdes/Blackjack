@@ -35,9 +35,7 @@ class PlayerModel(BaseModel):
     _bet: int
     _in_round: bool
 
-
-@api.get("/")
-async def root():
+def get_dealer():
     dealer = b.getDealer()
     dealer_obj = {
         "name": dealer._name,
@@ -47,6 +45,25 @@ async def root():
         "bet": dealer._bet,
         "in_round": dealer._in_round
     }
+    return dealer_obj
+def get_players():
+    players = b.getPlayers()
+    players_list = []
+    for player in players:
+        player_obj = {
+            "name": player._name,
+            "password": player._password,
+            "balance": player._balance,
+            "deck": [card.serialize() for card in player._deck],
+            "bet": player._bet,
+            "in_round": player._in_round
+        }
+        players_list.append(player_obj)
+    return players_list
+
+
+@api.get("/")
+async def root():
 
     return {
         "initBalance": b.getInitBalance(),
@@ -54,9 +71,22 @@ async def root():
         "turn": b.getTurn(),
         "minBet": b.getMinBet(),
         "deck": b.getDeck(),
-        "players": b.getPlayers(),
-        "dealer": dealer_obj
+        "players": get_players(),
+        "dealer": get_dealer()
     }
+
+
+
+
+
+@api.get("/join")
+async def join(name: str, password: str):
+    b.join(name, password)
+    return {
+        "players": get_players()
+    }
+
+
 
 @api.get("/start_round")
 async def start_round():
