@@ -23,26 +23,12 @@ b = BlackjackGame()
 api = FastAPI()
 
 
-def get_dealer():
-    dealer = b.getDealer()
-    dealer_obj = {
-        "name": dealer._name,
-        "password": dealer._password,
-        "balance": dealer._balance,
-        "deck": get_deck_for_player(dealer),
-        "bet": dealer._bet,
-        "in_round": dealer._in_round
-    }
-    return dealer_obj
-
-
 def get_players():
     players = b.getPlayers()
     players_list = []
     for player in players:
         player_obj = {
             "name": player._name,
-            "password": player._password,
             "balance": player._balance,
             "deck": get_deck_for_player(player),
             "bet": player._bet,
@@ -84,32 +70,28 @@ async def root():
         "gameState": b.getGameState(),
         "turn": b.getTurn(),
         "minBet": b.getMinBet(),
-        "deck": get_deck(),
         "players": get_players(),
-        "dealer": get_dealer()
+        "dealer_deck": b.getDealer()._deck
     }
 
 @api.get("/join")
 async def join(name: str, password: str):
-    b.join(name, password)
     return {
-        "players": get_players()
+        "success": b.join(name, password)
     }
 
 
 @api.get("/leave")
 async def leave(name: str, password: str):
-    b.leave(name, password)
     return {
-        "players": get_players()
+        "success": b.leave(name, password)
     }
 
 
 @api.get("/start_round")
 async def start_round():
-    b.start_round()
     return {
-        "status": b.getGameState()
+        "success": b.start_round()
     }
 
 # Game State 1: Placing Bets
@@ -118,7 +100,7 @@ async def start_round():
 @api.get("/place_bet")
 async def place_bet(name: str, password: str, bet: int):
     return {
-        "status": b.place_bet(name, password, bet)
+        "success": b.place_bet(name, password, bet)
     }
 
 # Game State 2: Drawing Cards
