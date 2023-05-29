@@ -73,6 +73,8 @@ def get_deck():
     return card_deck
 
 
+# Game State 0: Not Started
+
 @api.get("/")
 async def root():
 
