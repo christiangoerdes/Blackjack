@@ -16,10 +16,6 @@ import os
 from fastapi import FastAPI
 import uvicorn
 from blackjack import BlackjackGame
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-import json
 
 
 b = BlackjackGame()
