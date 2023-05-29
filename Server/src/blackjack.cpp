@@ -2,6 +2,7 @@
 #include <random>
 #include <vector>
 #include <algorithm>
+#include <chrono>
 
 #include "../include/blackjack.hpp"
 #include "../include/card.hpp"
@@ -200,8 +201,14 @@ void Blackjack::BlackjackGame::fill_deck() {
             _deck.push_back(Card(suit, type));
         }
     }
-    auto rng = std::default_random_engine {};
-    std::shuffle(std::begin(_deck), std::end(_deck), rng); // shuffle the deck
+
+    auto now = std::chrono::system_clock::now(); // Get the current time
+    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now); // Convert it to a suitable seed
+    auto epoch = now_ms.time_since_epoch();
+    auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+    long long seed = value.count();
+    auto rng = std::default_random_engine { seed }; // Seed the rng
+    std::shuffle(std::begin(_deck), std::end(_deck), rng); // Shuffle the deck
 }
 
 void Blackjack::BlackjackGame::hand_card(Player& player) {
