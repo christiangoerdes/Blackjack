@@ -27,15 +27,6 @@ b = BlackjackGame()
 api = FastAPI()
 
 
-class PlayerModel(BaseModel):
-    _name: str
-    _password: str
-    _balance: int
-    _deck: list
-    _bet: int
-    _in_round: bool
-
-
 def get_dealer():
     dealer = b.getDealer()
     dealer_obj = {
