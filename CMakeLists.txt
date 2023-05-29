@@ -28,14 +28,14 @@ find_package(pybind11 REQUIRED PATHS "${pybind11_DIR}")
 
 
 pybind11_add_module(blackjack
-        Server/extra/pybind.cpp
+        Server/api/pybind.cpp
         ${SRC_FILES}
         )
 
 ## Installiere die Bibliothek
 install(TARGETS blackjack
         COMPONENT python
-        LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/Server/extra")
+        LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/Server/api")
 
 
 #----------------------------------------------#
