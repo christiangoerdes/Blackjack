@@ -35,6 +35,7 @@ class PlayerModel(BaseModel):
     _bet: int
     _in_round: bool
 
+
 def get_dealer():
     dealer = b.getDealer()
     dealer_obj = {
@@ -46,6 +47,8 @@ def get_dealer():
         "in_round": dealer._in_round
     }
     return dealer_obj
+
+
 def get_players():
     players = b.getPlayers()
     players_list = []
@@ -61,6 +64,7 @@ def get_players():
         players_list.append(player_obj)
     return players_list
 
+
 def get_deck():
     deck = b.getDeck()
     card_deck = []
@@ -71,6 +75,7 @@ def get_deck():
         }
         card_deck.append(card_obj)
     return card_deck
+
 
 def get_deck_for_player(player):
     card_deck = []
@@ -87,7 +92,6 @@ def get_deck_for_player(player):
 
 @api.get("/")
 async def root():
-
     return {
         "initBalance": b.getInitBalance(),
         "gameState": b.getGameState(),
@@ -105,6 +109,7 @@ async def join(name: str, password: str):
         "players": get_players()
     }
 
+
 @api.get("/leave")
 async def leave(name: str, password: str):
     b.leave(name, password)
@@ -121,6 +126,7 @@ async def start_round():
     }
 
 # Game State 1: Placing Bets
+
 
 @api.get("/place_bet")
 async def place_bet(name: str, password: str, bet: int):
