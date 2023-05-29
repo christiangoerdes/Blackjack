@@ -41,7 +41,7 @@ def get_dealer():
         "name": dealer._name,
         "password": dealer._password,
         "balance": dealer._balance,
-        "deck": [card.serialize() for card in dealer._deck],
+        "deck": get_deck_for_player(dealer),
         "bet": dealer._bet,
         "in_round": dealer._in_round
     }
@@ -54,7 +54,7 @@ def get_players():
             "name": player._name,
             "password": player._password,
             "balance": player._balance,
-            "deck": [card.serialize() for card in player._deck],
+            "deck": get_deck_for_player(player),
             "bet": player._bet,
             "in_round": player._in_round
         }
@@ -65,6 +65,16 @@ def get_deck():
     deck = b.getDeck()
     card_deck = []
     for card in deck:
+        card_obj = {
+            "suit": card._suit,
+            "type": card._type
+        }
+        card_deck.append(card_obj)
+    return card_deck
+
+def get_deck_for_player(player):
+    card_deck = []
+    for card in player._deck:
         card_obj = {
             "suit": card._suit,
             "type": card._type
@@ -88,8 +98,6 @@ async def root():
         "dealer": get_dealer()
     }
 
-
-
 @api.get("/join")
 async def join(name: str, password: str):
     b.join(name, password)
@@ -108,6 +116,15 @@ async def leave(name: str, password: str):
 @api.get("/start_round")
 async def start_round():
     b.start_round()
+    return {
+        "status": b.getGameState()
+    }
+
+# Game State 1: Placing Bets
+
+@api.get("/place_bet")
+async def place_bet(name: str, password: str, bet: int):
+    b.place_bet(name, password, bet)
     return {
         "status": b.getGameState()
     }
