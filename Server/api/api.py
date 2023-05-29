@@ -130,11 +130,25 @@ async def start_round():
 
 @api.get("/place_bet")
 async def place_bet(name: str, password: str, bet: int):
-    b.place_bet(name, password, bet)
     return {
-        "status": b.getGameState()
+        "status": b.place_bet(name, password, bet)
     }
 
+# Game State 2: Drawing Cards
+
+
+@api.get("/draw")
+async def draw(name: str, password: str):
+    return {
+        "status": b.draw(name, password)
+    }
+
+
+@api.get("/skip")
+async def skip(name: str, password: str):
+    return {
+        "status": b.skip(name, password)
+    }
 
 
 if __name__ == "__main__":
