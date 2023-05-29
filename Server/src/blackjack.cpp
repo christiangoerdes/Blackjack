@@ -31,8 +31,10 @@ bool Blackjack::BlackjackGame::start_round() {
     _turn = 0;
     for (Player& player : _players) {
         player._in_round = true; // all players are initially in the game
+        player._deck.clear();
     }
 
+    return true;
 }
 
 bool Blackjack::BlackjackGame::join(std::string name, std::string password) {
@@ -136,6 +138,8 @@ bool Blackjack::BlackjackGame::draw(std::string name, std::string password) {
             _game_state = 0; // set game state to "not started"
         }
     }
+
+    return true;
 }
 
 bool Blackjack::BlackjackGame::skip(std::string name, std::string password) {
@@ -154,6 +158,8 @@ bool Blackjack::BlackjackGame::skip(std::string name, std::string password) {
             draw_dealer(); // dealer draws their cards
         }
     }
+
+    return true;
 }
 
 int Blackjack::BlackjackGame::getInitBalance() const {
@@ -201,7 +207,7 @@ void Blackjack::BlackjackGame::hand_card(Player& player) {
 }
 
 int Blackjack::BlackjackGame::deck_value(const std::vector<Card>& deck) const {
-    int total_value;
+    int total_value = 0;
     int num_aces = 0;
 
     for (const Card& card : deck){
