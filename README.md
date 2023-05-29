@@ -15,7 +15,5 @@ Um einen Build zu erstellen, muss das folgende Command im Wurzelverzeichnis des 
 Um die API zu starten, muss einer der beiden folgenden Commands im Server/extra Verzeichnis ausgeführt werden:
 
     uvicorn api:api --port 8000 --reload
-
-
-
+\
     python3 -m uvicorn api:api --port 8000  --reload
