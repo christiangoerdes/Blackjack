@@ -33,6 +33,7 @@ bool Blackjack::BlackjackGame::start_round() {
         player._in_round = true; // all players are initially in the game
         player._deck.clear();
     }
+    dealer._deck.clear();
 
     return true;
 }
