@@ -19,7 +19,8 @@ PYBIND11_MODULE(blackjack, m) {
         .def_readwrite("_balance", &Player::_balance)
         .def_readwrite("_deck", &Player::_deck)
         .def_readwrite("_bet", &Player::_bet)
-        .def_readwrite("_in_round", &Player::_in_round);
+        .def_readwrite("_in_round", &Player::_in_round)
+        .def_readwrite("_deck_value", &Player::_deck_value);
 
     py::class_<BlackjackGame>(m, "BlackjackGame")
         .def(py::init())

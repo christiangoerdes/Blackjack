@@ -14,9 +14,9 @@ namespace Blackjack {
         std::string _password;
         int _balance;
         std::vector<Card> _deck;
-        int _bet;
+        int _bet = 0;
         bool _in_round;
-        int _deck_value;
+        int _deck_value = 0;
     };
 
 }

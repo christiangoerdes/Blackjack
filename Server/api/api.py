@@ -32,7 +32,8 @@ def get_players():
             "balance": player._balance,
             "deck": get_deck_for_player(player),
             "bet": player._bet,
-            "in_round": player._in_round
+            "in_round": player._in_round,
+            "deck_value": player._deck_value
         }
         players_list.append(player_obj)
     return players_list
@@ -61,6 +62,14 @@ def get_deck_for_player(player):
     return card_deck
 
 
+def get_dealer():
+    dealer_obj = {
+        "deck": get_deck_for_player(b.getDealer()),
+        "deck_value": b.getDealer()._deck_value
+    }
+    return dealer_obj
+
+
 # Game State 0: Not Started
 
 @api.get("/")
@@ -71,7 +80,7 @@ async def root():
         "turn": b.getTurn(),
         "minBet": b.getMinBet(),
         "players": get_players(),
-        "dealer_deck": b.getDealer()._deck
+        "dealer": get_dealer()
     }
 
 

@@ -85,7 +85,7 @@ namespace Blackjack {
 
         int _init_balance;
         int _game_state;
-        int _turn;
+        int _turn = 0;
         int _MIN_BET = 5;
 
         std::vector<Player> _players;
