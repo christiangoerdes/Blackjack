@@ -4,10 +4,9 @@
 #include <random>
 #include <vector>
 #include <algorithm>
-#include "json.hpp"
 
-#include <card.hpp>
-#include <player.hpp>
+#include "card.hpp"
+#include "player.hpp"
 
 namespace Blackjack {
 
@@ -62,12 +61,13 @@ namespace Blackjack {
         */
         bool skip(std::string name, std::string password);
 
+        int getInitBalance() const;
 
-        /**
-         * @brief Get the Blackjack object as a json
-         * @return json with the current attributes
-         */
-        nlohmann::json to_json() const;
+        int getGameState() const;
+
+        std::vector<Blackjack::Player> getPlayers() const;
+
+        Blackjack::Player getDealer() const;
 
     private:
 
@@ -128,6 +128,8 @@ namespace Blackjack {
          * @brief Dealer draws cards after all players have drawn theirs
         */
         void draw_dealer();
+
+
 
     };
 

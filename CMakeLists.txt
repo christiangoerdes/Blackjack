@@ -70,7 +70,7 @@ enable_testing()
 #----------------------------------------------#
 
 # Declare test program blackjack_test
-add_executable(blackjack_test Server/test/test.cpp)
+add_executable(blackjack_test Server/test/test.cpp Server/src/blackjack.cpp Server/src/blackjack.cpp)
 target_link_libraries(blackjack_test GTest::gtest_main)
 gtest_discover_tests(blackjack_test)
 

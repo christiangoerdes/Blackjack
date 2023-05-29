@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 
+#include "../include/blackjack.hpp"
 #include "../include/card.hpp"
 #include "../include/player.hpp"
 
@@ -169,11 +170,11 @@ int Blackjack::BlackjackGame::getGameState() const {
     return _game_state;
 }
 
-std::vector<Player> Blackjack::BlackjackGame::getPlayers() const {
+std::vector<Blackjack::Player> Blackjack::BlackjackGame::getPlayers() const {
     return _players;
 }
 
-Player Blackjack::BlackjackGame::getDealer() const {
+Blackjack::Player Blackjack::BlackjackGame::getDealer() const {
     return dealer;
 }
 
@@ -293,7 +294,11 @@ Blackjack::Card::Card(char suit, std::string type) {
     this->_type = type;
 }
 
-Blackjack::Player::Player(int name, int password, int init_balance) {
+Blackjack::Player::Player() {
+
+}
+
+Blackjack::Player::Player(std::string name, std::string password, int init_balance) {
     this->_name = name;
     this->_password = password;
     this->_balance = init_balance;

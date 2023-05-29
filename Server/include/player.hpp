@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#include <vector>
 
 #include "card.hpp"
 
@@ -6,6 +8,7 @@ namespace Blackjack {
 
     class Player{
     public:
+        Player();
         Player(std::string name, std::string password, int init_balance);
 
         std::string _name;

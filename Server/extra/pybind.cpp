@@ -2,19 +2,20 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "../include/json.hpp"
 
 namespace py = pybind11;
 using namespace Blackjack;
-namespace json = nlohmann; // Add an alias for the json namespace
 
 PYBIND11_MODULE(blackjack, m) {
+    py::class_<Card>(m, "Card")
+        .def(py::init<char, std::string>());
+
     py::class_<Player>(m, "Player")
-        .def_readonly("name", &Player::name)
-        .def_readonly("balance", &Player::balance)
-        .def_readonly("hand", &Player::hand);
+        .def(py::init())
+        .def(py::init<std::string, std::string, int>());
+
     py::class_<BlackjackGame>(m, "BlackjackGame")
-        .def(py::init<>())
+        .def(py::init())
         .def(py::init<int>())
         .def("start_round", &BlackjackGame::start_round)
         .def("join", &BlackjackGame::join)
@@ -25,5 +26,5 @@ PYBIND11_MODULE(blackjack, m) {
         .def("getInitBalance", &BlackjackGame::getInitBalance)
         .def("getGameState", &BlackjackGame::getGameState)
         .def("getPlayers", &BlackjackGame::getPlayers)
-        .def("getDealer", &BlackjackGame::getDealer, py::return_value_policy::reference);
+        .def("getDealer", &BlackjackGame::getDealer);
 }
