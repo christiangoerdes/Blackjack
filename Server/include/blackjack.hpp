@@ -6,6 +6,9 @@
 #include <algorithm>
 #include "json.hpp"
 
+#include <card.hpp>
+#include <player.hpp>
+
 namespace Blackjack {
 
     class BlackjackGame {
@@ -68,8 +71,15 @@ namespace Blackjack {
 
     private:
 
-        struct Card;
-        struct Player;
+        int _init_balance;
+        int _game_state;
+        int _turn;
+        int _MIN_BET = 5;
+        std::vector<Card> _deck;
+        std::vector<Player> _players;
+        Player dealer;
+        const std::vector<std::string> _card_types{"2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "Q", "K"}; // 13 types of cardes
+        const std::vector<char> _suits{'C','S','D','H'}; // 4 types of suits: clubs, spades, diamonds and hearts
 
         /**
          * @brief Fills the game deck with all 52 cards in random order
