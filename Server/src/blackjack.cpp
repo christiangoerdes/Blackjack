@@ -23,6 +23,20 @@ public:
         _game_state = 0;
         _players = std::vector<Player>();
     }
+
+    struct Card {
+        char _suit;
+        std::string _type;
+    };
+
+    struct Player {
+        std::string _name;
+        std::string _password;
+        int _balance;
+        std::vector<Card> _deck;
+        int _bet;
+        bool _in_round;
+    };
     
     /// Game State 0: Not Started
 
@@ -164,60 +178,28 @@ public:
         }
     }
 
-    nlohmann::json to_json() const {
-        nlohmann::json jsonObj;
-        jsonObj["_init_balance"] = _init_balance;
-        jsonObj["_game_state"] = _game_state;
-        jsonObj["_turn"] = _turn;
-        jsonObj["_MIN_BET"] = _MIN_BET;
-        jsonObj["_deck"] = nlohmann::json::array();
-        for (const auto& card : _deck) {
-            jsonObj["_deck"].push_back(card.toJson());
-        }
-        jsonObj["_players"] = nlohmann::json::array();
-        for (const auto& player : _players) {
-            jsonObj["_players"].push_back(player.toJson());
-        }
-        jsonObj["dealer"] = dealer.toJson();
-        return jsonObj;
+    int getInitBalance() const {
+        return _init_balance;
     }
+
+    int getGameState() const {
+        return _game_state;
+    }
+
+    std::vector<Player> getPlayers() const {
+        return _players;
+    }
+
+    Player getDealer() const {
+        return dealer;
+    }
+
+
+
 
 private:
 
-    struct Card {
-        char _suit;
-        std::string _type;
 
-        nlohmann::json toJson() const {
-            nlohmann::json jsonObj;
-            jsonObj["_suit"] = std::string(1, _suit);
-            jsonObj["_type"] = _type;
-            return jsonObj;
-        }
-    };
-
-    struct Player {
-        std::string _name;
-        std::string _password;
-        int _balance;
-        std::vector<Card> _deck;
-        int _bet;
-        bool _in_round;
-
-        nlohmann::json toJson() const {
-            nlohmann::json jsonObj;
-            jsonObj["_name"] = _name;
-            jsonObj["_password"] = _password;
-            jsonObj["_balance"] = _balance;
-            jsonObj["_deck"] = nlohmann::json::array();
-            for (const auto& card : _deck) {
-                jsonObj["_deck"].push_back(card.toJson());
-            }
-            jsonObj["_bet"] = _bet;
-            jsonObj["_in_round"] = _in_round;
-            return jsonObj;
-        }
-    };
 
     int _init_balance;
     int _game_state;

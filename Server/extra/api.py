@@ -26,7 +26,10 @@ api = FastAPI()
 @api.get("/")
 async def root():
     return {
-        "json": b.to_json()
+        "balance": b.getInitBalance(),
+        "gameState": b.getGameState(),
+        "players": b.getPlayers(),
+        "dealer": b.getDealer()
     }
 
 
