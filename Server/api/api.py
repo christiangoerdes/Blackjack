@@ -77,8 +77,6 @@ async def root():
 
 
 
-
-
 @api.get("/join")
 async def join(name: str, password: str):
     b.join(name, password)
