@@ -8,7 +8,6 @@ namespace Blackjack {
 
     class Player{
     public:
-        Player();
         Player(std::string name, std::string password, int init_balance);
 
         std::string _name;
@@ -17,6 +16,7 @@ namespace Blackjack {
         std::vector<Card> _deck;
         int _bet;
         bool _in_round;
+
     };
 
 }

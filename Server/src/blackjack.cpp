@@ -1,5 +1,3 @@
-//#include <blackjack.hpp>
-
 #include <iostream>
 #include <random>
 #include <vector>
@@ -13,13 +11,11 @@
 Blackjack::BlackjackGame::BlackjackGame(){
     _init_balance = 1000;
     _game_state = 0;
-    _players = std::vector<Player>();
 }
 
 Blackjack::BlackjackGame::BlackjackGame(int init_balance){
     _init_balance = init_balance;
     _game_state = 0;
-    _players = std::vector<Player>();
 }
 
 /// Game State 0: Not Started
@@ -170,6 +166,18 @@ int Blackjack::BlackjackGame::getGameState() const {
     return _game_state;
 }
 
+int Blackjack::BlackjackGame::getTurn() const {
+    return _turn;
+}
+
+int Blackjack::BlackjackGame::getMinBet() const {
+    return _MIN_BET;
+}
+
+std::vector<Blackjack::Card> Blackjack::BlackjackGame::getDeck() const {
+    return _deck;
+}
+
 std::vector<Blackjack::Player> Blackjack::BlackjackGame::getPlayers() const {
     return _players;
 }
@@ -294,9 +302,6 @@ Blackjack::Card::Card(char suit, std::string type) {
     this->_type = type;
 }
 
-Blackjack::Player::Player() {
-
-}
 
 Blackjack::Player::Player(std::string name, std::string password, int init_balance) {
     this->_name = name;

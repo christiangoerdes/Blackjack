@@ -61,13 +61,23 @@ namespace Blackjack {
         */
         bool skip(std::string name, std::string password);
 
+        // Getter
+
         int getInitBalance() const;
 
         int getGameState() const;
 
+        int getTurn() const;
+
+        int getMinBet() const;
+
+        std::vector<Card> getDeck() const;
+
         std::vector<Blackjack::Player> getPlayers() const;
 
         Blackjack::Player getDealer() const;
+
+        std::vector<Card> _deck;
 
     private:
 
@@ -75,9 +85,9 @@ namespace Blackjack {
         int _game_state;
         int _turn;
         int _MIN_BET = 5;
-        std::vector<Card> _deck;
+
         std::vector<Player> _players;
-        Player dealer;
+        Player dealer = Player("dealer", "123", 1);
         const std::vector<std::string> _card_types{"2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "Q", "K"}; // 13 types of cardes
         const std::vector<char> _suits{'C','S','D','H'}; // 4 types of suits: clubs, spades, diamonds and hearts
 

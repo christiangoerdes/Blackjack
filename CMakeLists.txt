@@ -17,6 +17,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Füge selbsgeschriebene Includes hinzu
 include_directories(Server/src)
+
 # Füge externe Includes hinzu
 include_directories(Server/external)
 

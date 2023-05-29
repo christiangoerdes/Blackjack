@@ -16,6 +16,10 @@ import os
 from fastapi import FastAPI
 import uvicorn
 from blackjack import BlackjackGame
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+import json
 
 
 b = BlackjackGame()
@@ -23,11 +27,47 @@ b = BlackjackGame()
 api = FastAPI()
 
 
+class PlayerModel(BaseModel):
+    _name: str
+    _password: str
+    _balance: int
+    _deck: list
+    _bet: int
+    _in_round: bool
+
+
 @api.get("/")
 async def root():
-    return {
-        "balance": b.start_round()
+    dealer = b.getDealer()
+    dealer_obj = {
+        "name": dealer._name,
+        "password": dealer._password,
+        "balance": dealer._balance,
+        "deck": [card.serialize() for card in dealer._deck],
+        "bet": dealer._bet,
+        "in_round": dealer._in_round
     }
+
+    return {
+        "initBalance": b.getInitBalance(),
+        "gameState": b.getGameState(),
+        "turn": b.getTurn(),
+        "minBet": b.getMinBet(),
+        "deck": b.getDeck(),
+        "players": b.getPlayers(),
+        "dealer": dealer_obj
+    }
+
+
+@api.get("/foo")
+async def get_player():
+    player = blackjack.Player()  # Example player object
+    try:
+        # Convert the player object to a dictionary using the custom encoder
+        player_dict = jsonable_encoder(player, by_alias=True)
+        return JSONResponse(content=player_dict)
+    except Exception as x:
+        return JSONResponse(content={"error": str(x)})
 
 
 if __name__ == "__main__":
