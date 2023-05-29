@@ -61,6 +61,17 @@ def get_players():
         players_list.append(player_obj)
     return players_list
 
+def get_deck():
+    deck = b.getDeck()
+    card_deck = []
+    for card in deck:
+        card_obj = {
+            "suit": card._suit,
+            "type": card._type
+        }
+        card_deck.append(card_obj)
+    return card_deck
+
 
 @api.get("/")
 async def root():
@@ -70,7 +81,7 @@ async def root():
         "gameState": b.getGameState(),
         "turn": b.getTurn(),
         "minBet": b.getMinBet(),
-        "deck": b.getDeck(),
+        "deck": get_deck(),
         "players": get_players(),
         "dealer": get_dealer()
     }
