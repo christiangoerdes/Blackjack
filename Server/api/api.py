@@ -95,6 +95,12 @@ async def join(name: str, password: str):
         "players": get_players()
     }
 
+@api.get("/leave")
+async def leave(name: str, password: str):
+    b.leave(name, password)
+    return {
+        "players": get_players()
+    }
 
 
 @api.get("/start_round")
@@ -104,16 +110,6 @@ async def start_round():
         "status": b.getGameState()
     }
 
-
-@api.get("/foo")
-async def get_player():
-    player = blackjack.Player()  # Example player object
-    try:
-        # Convert the player object to a dictionary using the custom encoder
-        player_dict = jsonable_encoder(player, by_alias=True)
-        return JSONResponse(content=player_dict)
-    except Exception as x:
-        return JSONResponse(content={"error": str(x)})
 
 
 if __name__ == "__main__":
