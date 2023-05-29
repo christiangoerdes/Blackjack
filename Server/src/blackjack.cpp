@@ -86,13 +86,14 @@ bool Blackjack::BlackjackGame::place_bet(std::string name, std::string password,
     }
 
     current_player._bet = bet; // place the bet
+    _turn++;
 
-    if (_turn == _players.size()-1) { // if the last player has placed their bet
+    if (_turn == _players.size()) { // if the last player has placed their bet
 
         for (Player& player : _players) { // each player gets two cards
             hand_card(player);
             hand_card(player);
-            check_reward(player);
+            check_reward(player); // check if player has already won
         }
 
         hand_card(dealer); // dealer gets two cards
@@ -106,9 +107,6 @@ bool Blackjack::BlackjackGame::place_bet(std::string name, std::string password,
         }
         _turn = 0;
 
-    }
-    else {
-        _turn++; // it is the next player's turn now
     }
     return true;
 }
@@ -213,7 +211,7 @@ int Blackjack::BlackjackGame::deck_value(const std::vector<Card>& deck) const {
                 total_value += 10; // J, Q, and K are valued 10 each
             }
             else {
-                total_value += std::stoi(card._type);
+                total_value += std::stoi(card._type); // face value
             }
         }
         else {
@@ -229,6 +227,7 @@ int Blackjack::BlackjackGame::deck_value(const std::vector<Card>& deck) const {
             total_value += num_aces; // otherwise count all aces as having value 1
         }
     }
+
     return total_value;
 }
 
@@ -285,6 +284,10 @@ void Blackjack::BlackjackGame::draw_dealer() {
     int dealer_value = deck_value(dealer._deck);
 
     for (Player& player : _players) {
+
+        if (!player._in_round) { // if player not in round
+            continue;
+        }
 
         int player_value = deck_value(player._deck);
 

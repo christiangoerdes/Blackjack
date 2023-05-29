@@ -49,6 +49,8 @@ namespace Blackjack {
         */
         bool place_bet(std::string name, std::string password, int bet);
 
+        // Game State 2: Drawing Cards
+
         /**
          * @brief Current player draws a card
          * @return Feedback whether call was valid
@@ -138,8 +140,6 @@ namespace Blackjack {
          * @brief Dealer draws cards after all players have drawn theirs
         */
         void draw_dealer();
-
-
 
     };
 
