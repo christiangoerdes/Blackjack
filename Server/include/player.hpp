@@ -16,7 +16,7 @@ namespace Blackjack {
         std::vector<Card> _deck;
         int _bet;
         bool _in_round;
-
+        int _deck_value;
     };
 
 }

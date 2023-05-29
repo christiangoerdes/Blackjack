@@ -32,8 +32,10 @@ bool Blackjack::BlackjackGame::start_round() {
     for (Player& player : _players) {
         player._in_round = true; // all players are initially in the game
         player._deck.clear();
+        player._deck_value = 0;
     }
     dealer._deck.clear();
+    dealer._deck_value = 0;
 
     return true;
 }
@@ -205,6 +207,7 @@ void Blackjack::BlackjackGame::fill_deck() {
 void Blackjack::BlackjackGame::hand_card(Player& player) {
     player._deck.push_back(_deck.back());
     _deck.pop_back();
+    player._deck_value = deck_value(player._deck);
 }
 
 int Blackjack::BlackjackGame::deck_value(const std::vector<Card>& deck) const {
@@ -259,11 +262,9 @@ bool Blackjack::BlackjackGame::players_left() const{
 
 void Blackjack::BlackjackGame::check_reward(Player& player) {
 
-    int value = deck_value(player._deck);
+    if (player._deck_value >= 21) { // player wins/loses and leaves the game
 
-    if (value >= 21) { // player wins/loses and leaves the game
-
-        if (value == 21) {
+        if (player._deck_value == 21) {
             reward(player);
         }
         else {
@@ -284,11 +285,9 @@ int Blackjack::BlackjackGame::next_player() const {
 }
 
 void Blackjack::BlackjackGame::draw_dealer() {
-    while (deck_value(dealer._deck) < 17) { // dealer must draw as long as his value is below 17
+    while (dealer._deck_value < 17) { // dealer must draw as long as his value is below 17
         hand_card(dealer);
     }
-
-    int dealer_value = deck_value(dealer._deck);
 
     for (Player& player : _players) {
 
@@ -296,9 +295,7 @@ void Blackjack::BlackjackGame::draw_dealer() {
             continue;
         }
 
-        int player_value = deck_value(player._deck);
-
-        if (player_value > dealer_value || dealer_value > 21) { // if the dealer has lost or the player has more value
+        if (player._deck_value > dealer._deck_value || dealer._deck_value > 21) { // if the dealer has lost or the player has more value
             reward(player);
         }
         else {
