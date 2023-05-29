@@ -74,6 +74,7 @@ async def root():
         "dealer_deck": b.getDealer()._deck
     }
 
+
 @api.get("/join")
 async def join(name: str, password: str):
     return {
