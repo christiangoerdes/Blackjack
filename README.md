@@ -25,3 +25,6 @@ Dependencies Commands
 - Ibrahim Fakhir
 - Christian Goerdes
 - Sergej Zuev
+
+## Projektdetails
+[Implementationsdetails](https://gitlab.informatik.uni-bonn.de/xx_best_oose_group_xx/projektbeta/-/blob/e2ffaa9738465814f7dee422b9db3b628f47ad4c/docs/Implementation%20Details/implementation_details.drawio.png)
