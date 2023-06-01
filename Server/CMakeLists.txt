@@ -3,7 +3,7 @@
 # Minimale Version des Buildsystems
 cmake_minimum_required(VERSION 3.14)
 # Name des Projekts
-project(Hangman)
+project(Blackjack)
 
 ## Optionen ##
 
@@ -30,7 +30,7 @@ pybind11_add_module(blackjack
 ## Installiere die Bibliothek
 install(TARGETS blackjack
         COMPONENT python
-        LIBRARY DESTINATION "api")
+        LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/api")
 
 
 #----------------------------------------------#

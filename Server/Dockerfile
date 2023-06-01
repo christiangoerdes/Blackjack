@@ -1,19 +1,32 @@
-# Stage 1: Build stage with C++ and Pybind11
-FROM gcc as builder
+FROM python:3.9-slim-buster
 
 WORKDIR /app
 
-# Update and upgrade the system
-RUN apt-get update && apt-get upgrade -y
-
 # Install dependencies
-RUN apt-get install -y cmake python3-dev libboost-all-dev python3-pip --no-install-recommends
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git \
+    libboost-all-dev \
+    python3-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install pybind11
+RUN git clone https://github.com/pybind/pybind11.git && \
+    cd pybind11 && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make install
+
+# Download and install a specific version of CMake (3.21.2 in this example)
+RUN curl -sSL https://cmake.org/files/v3.21/cmake-3.21.2-Linux-x86_64.tar.gz | tar -xz --strip-components=1 -C /usr/local
 
 # Copy the API directory
 COPY ./api /app/api
 
-# Copy the external directory
-COPY ./external /app/external
+RUN rm /app/api/blackjack.cpython-310-x86_64-linux-gnu.so
 
 # Copy the include directory
 COPY ./include /app/include
@@ -27,37 +40,14 @@ COPY ./test /app/test
 # Copy the cmake
 COPY ./CMakeLists.txt /app
 
-# Install pybind11
-RUN git clone https://github.com/pybind/pybind11.git && \
-    cd pybind11 && \
-    mkdir build && \
-    cd build && \
-    cmake .. && \
-    make install
-
 # Build the C++ code with Pybind11
 RUN cmake -S . -B build && cmake --build build && cmake --install build
-
-# Stage 2: Final stage with Python dependencies and runtime
-FROM python:3.9-slim
-
-WORKDIR /app
-
-# Stage 2: Runtime stage with Python and Pybind11
-FROM python:3.9-slim
-WORKDIR /app
-
-# Copy the built C++ code from the previous stage
-COPY --from=builder /app /app
 
 # Install Python dependencies
 RUN pip install --no-cache-dir \
     fastapi \
     uvicorn \
     pytest
-
-# Copy the API directory
-COPY ./api /app/api
 
 # Expose the required port
 EXPOSE 8000
