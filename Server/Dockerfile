@@ -9,8 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     libboost-all-dev \
     python3-dev \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+    curl
 
 # Install pybind11
 RUN git clone https://github.com/pybind/pybind11.git && \
@@ -24,6 +23,12 @@ RUN git clone https://github.com/pybind/pybind11.git && \
 RUN curl -sSL https://github.com/Kitware/CMake/releases/download/v3.21.2/cmake-3.21.2-linux-x86_64.tar.gz -o cmake.tar.gz && \
     tar -xf cmake.tar.gz --strip-components=1 -C /usr/local && \
     rm cmake.tar.gz
+
+# Install Python dependencies first to leverage Docker build cache
+RUN pip install --no-cache-dir \
+    fastapi \
+    uvicorn \
+    pytest
 
 # Copy the API directory
 COPY ./api /app/api
@@ -44,12 +49,6 @@ COPY ./CMakeLists.txt /app
 
 # Build the C++ code with Pybind11
 RUN cmake -S . -B build && cmake --build build && cmake --install build
-
-# Install Python dependencies
-RUN pip install --no-cache-dir \
-    fastapi \
-    uvicorn \
-    pytest
 
 # Expose the required port
 EXPOSE 8000

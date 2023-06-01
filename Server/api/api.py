@@ -20,13 +20,14 @@ sys.modules[spec.name] = blackjack_module
 spec.loader.exec_module(blackjack_module)
 
 try:
-    import blackjack
+    from blackjack_module import blackjack
 except ImportError as e:
-    print(f"Importing the shared library 'blackjack' did not work.")
-    print(f"Is (a link to) the shared library 'blackjack.____.so' in the same directory as this python script?")
-    print(f"The import caused the following exception '{e}'")
+    print(f"Importing the shared library 'blackjack_module' did not work.")
+    print(f"Is (a link to) the shared library 'blackjack.cpython-310-x86_64-linux-gnu.so' in the 'api' directory?")
+    print(f"The import caused the following exception: {e}")
     print(f"Exiting")
     exit(1)
+
 
 import os
 from fastapi import FastAPI
