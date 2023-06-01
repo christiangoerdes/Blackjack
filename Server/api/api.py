@@ -2,10 +2,22 @@
 #   uvicorn api:api --port 8000 --reload
 # or, if uvicorn is not in PATH, run as
 #   python3 -m uvicorn api:api --port 8000  --reload
-import ctypes
 
-# Load the shared library
-blackjack = ctypes.CDLL('./blackjack.cpython-311-x86_64-linux-gnu.so')
+import os
+import sys
+import importlib.util
+
+# Get the current directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the path to the shared library
+library_path = os.path.join(current_dir, "blackjack.cpython-39-x86_64-linux-gnu.so")
+
+# Import the shared library as a module
+spec = importlib.util.spec_from_file_location("blackjack_module", library_path)
+blackjack_module = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = blackjack_module
+spec.loader.exec_module(blackjack_module)
 
 try:
     import blackjack

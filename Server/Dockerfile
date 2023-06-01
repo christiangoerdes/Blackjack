@@ -21,7 +21,9 @@ RUN git clone https://github.com/pybind/pybind11.git && \
     make install
 
 # Download and install a specific version of CMake (3.21.2 in this example)
-RUN curl -sSL https://cmake.org/files/v3.21/cmake-3.21.2-Linux-x86_64.tar.gz | tar -xz --strip-components=1 -C /usr/local
+RUN curl -sSL https://github.com/Kitware/CMake/releases/download/v3.21.2/cmake-3.21.2-linux-x86_64.tar.gz -o cmake.tar.gz && \
+    tar -xf cmake.tar.gz --strip-components=1 -C /usr/local && \
+    rm cmake.tar.gz
 
 # Copy the API directory
 COPY ./api /app/api
