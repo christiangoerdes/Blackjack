@@ -2,6 +2,10 @@
 #   uvicorn api:api --port 8000 --reload
 # or, if uvicorn is not in PATH, run as
 #   python3 -m uvicorn api:api --port 8000  --reload
+import ctypes
+
+# Load the shared library
+blackjack = ctypes.CDLL('./blackjack.cpython-311-x86_64-linux-gnu.so')
 
 try:
     import blackjack
