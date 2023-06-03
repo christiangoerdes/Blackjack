@@ -1,18 +1,33 @@
 # Blackjack
 
-## Build erstellen
+## Server mit Docker starten
+Um den Server mit Docker zu starten, muss man Docker auf seinem Gerät configuriert haben. Anschließend  müssen die folgenden Commands im `/Server` verzeichnis ausgeführt werden:
+
+
+Container bauen:
+
+    sudo docker build -t blackjack_api .
+
+Container starten:
+
+    sudo docker run --network host blackjack_api
+
+
+## Server ohne Docker starten
+### Build erstellen:
 Um einen Build zu erstellen, muss das folgende Command im Wurzelverzeichnis des Projekts eingegeben werden:
     
     cmake -S . -B build && cmake --build build && cmake --install build
 
-## API starten
-Um die API zu starten, muss einer der beiden folgenden Commands im Server/api Verzeichnis ausgeführt werden:
+### API starten:
+Um die API zu starten, muss einer der beiden folgenden Commands im `/Server/api` Verzeichnis ausgeführt werden:
 
     uvicorn api:api --port 8000 --reload
- ---
+ ###
 
     python3 -m uvicorn api:api --port 8000  --reload
 
+---
 ## Client
 
 Dependencies Commands
