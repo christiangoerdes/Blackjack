@@ -3,7 +3,7 @@
 # Minimale Version des Buildsystems
 cmake_minimum_required(VERSION 3.14)
 # Name des Projekts
-project(Hangman)
+project(Blackjack)
 
 ## Optionen ##
 
@@ -16,26 +16,21 @@ set(CMAKE_CXX_STANDARD 17)
 # add_link_options(-fsanitize=address)
 
 # Füge selbsgeschriebene Includes hinzu
-include_directories(Server/src)
+include_directories(src)
 
-# Füge externe Includes hinzu
-include_directories(Server/external)
-
-set(pybind11_DIR "/home/chrisi/.local/lib/python3.10/site-packages/pybind11/share/cmake/pybind11")
-find_package(pybind11 REQUIRED PATHS "${pybind11_DIR}")
+find_package(pybind11 REQUIRED)
 
 ## Baue Programme ##
 
 
 pybind11_add_module(blackjack
-        Server/api/pybind.cpp
-        ${SRC_FILES}
+        api/pybind.cpp
         )
 
 ## Installiere die Bibliothek
 install(TARGETS blackjack
         COMPONENT python
-        LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/Server/api")
+        LIBRARY DESTINATION "${PROJECT_SOURCE_DIR}/api")
 
 
 #----------------------------------------------#
@@ -71,7 +66,7 @@ enable_testing()
 #----------------------------------------------#
 
 # Declare test program blackjack_test
-add_executable(blackjack_test Server/test/test.cpp Server/src/blackjack.cpp Server/src/blackjack.cpp)
+add_executable(blackjack_test test/test.cpp src/blackjack.cpp src/blackjack.cpp)
 target_link_libraries(blackjack_test GTest::gtest_main)
 gtest_discover_tests(blackjack_test)
 
