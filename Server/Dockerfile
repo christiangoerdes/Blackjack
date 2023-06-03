@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM ubuntu:22.04
 
 WORKDIR /app
 
@@ -9,7 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     libboost-all-dev \
     python3-dev \
-    curl
+    curl \
+    ca-certificates \
+    python3-pip
 
 # Install pybind11
 RUN git clone https://github.com/pybind/pybind11.git && \
