@@ -17,12 +17,20 @@ import os
 from fastapi import FastAPI
 import uvicorn
 from blackjack import BlackjackGame
+from fastapi.middleware.cors import CORSMiddleware
 
 
 b = BlackjackGame()
 
 api = FastAPI()
 
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins="*",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_players():
     players = b.getPlayers()
