@@ -15,7 +15,7 @@ Container starten:
 
 ## Server ohne Docker starten
 ### Build erstellen:
-Um einen Build zu erstellen, muss das folgende Command im Wurzelverzeichnis des Projekts eingegeben werden:
+Um einen Build zu erstellen, muss der folgende Command im `/Server` Verzeichnis des Projekts eingegeben werden:
     
     cmake -S . -B build && cmake --build build && cmake --install build
 
