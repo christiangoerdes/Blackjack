@@ -35,8 +35,6 @@ RUN pip install --no-cache-dir \
 # Copy the API directory
 COPY ./api /app/api
 
-RUN rm /app/api/blackjack.cpython-310-x86_64-linux-gnu.so
-
 # Copy the include directory
 COPY ./include /app/include
 

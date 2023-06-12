@@ -18,6 +18,9 @@ set(CMAKE_CXX_STANDARD 17)
 # Füge selbsgeschriebene Includes hinzu
 include_directories(src)
 
+# use if not like docker
+# set(pybind11_DIR "/home/ibo/.local/lib/python3.10/site-packages/pybind11/share/cmake/pybind11")
+
 find_package(pybind11 REQUIRED)
 
 ## Baue Programme ##
