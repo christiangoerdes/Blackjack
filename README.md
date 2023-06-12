@@ -30,10 +30,13 @@ Um die API zu starten, muss einer der beiden folgenden Commands im `/Server/api`
 ---
 ## Client
 
-Dependencies Commands
+Make sure to have Node installed on your Computer.
 
-- sudo apt install python3
-- pip install requests
+Run
+
+    npm install
+
+in the /Client folder to install dependencies
 
 ## Mitglieder
 
