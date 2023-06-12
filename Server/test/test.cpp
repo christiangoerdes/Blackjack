@@ -1,69 +1,38 @@
-//#include <gtest/gtest.h>
-//#include "../src/blackjack.cpp"
-//
-//using namespace Blackjack;
-//
-//TEST(BlackjackGameTest, StartRound) {
-//BlackjackGame game;
-//ASSERT_TRUE(game.start_round());
-//}
-//
-//TEST(BlackjackGameTest, Join) {
-//BlackjackGame game;
-//ASSERT_TRUE(game.join("Player1", "password1"));
-//}
-//
-//TEST(BlackjackGameTest, Leave) {
-//BlackjackGame game;
-//game.join("Player1", "password1");
-//ASSERT_TRUE(game.leave("Player1", "password1"));
-//}
-//
-//TEST(BlackjackGameTest, PlaceBet) {
-//BlackjackGame game;
-//game.join("Player1", "password1");
-//ASSERT_TRUE(game.place_bet("Player1", "password1", 10));
-//}
-//
-//TEST(BlackjackGameTest, Draw) {
-//BlackjackGame game;
-//game.join("Player1", "password1");
-//game.place_bet("Player1", "password1", 10);
-//ASSERT_TRUE(game.draw("Player1", "password1"));
-//}
-//
-//TEST(BlackjackGameTest, Skip) {
-//BlackjackGame game;
-//game.join("Player1", "password1");
-//game.place_bet("Player1", "password1", 10);
-//ASSERT_TRUE(game.skip("Player1", "password1"));
-//}
-//
-//TEST(BlackjackGameTest, ToJson) {
-//BlackjackGame game;
-//game.join("Player1", "password1");
-//game.join("Player2", "password2");
-//
-//nlohmann::json expectedJson;
-//expectedJson["_init_balance"] = 1000;
-//expectedJson["_game_state"] = 0;
-//expectedJson["_turn"] = 0;
-//expectedJson["_MIN_BET"] = 5;
-//expectedJson["_deck"] = nlohmann::json::array();
-//expectedJson["_players"] = nlohmann::json::array();
-//expectedJson["dealer"]["_name"] = "";
-//expectedJson["dealer"]["_password"] = "";
-//expectedJson["dealer"]["_balance"] = 0;
-//expectedJson["dealer"]["_deck"] = nlohmann::json::array();
-//expectedJson["dealer"]["_bet"] = 0;
-//expectedJson["dealer"]["_in_round"] = false;
-//
-//nlohmann::json actualJson = game.to_json();
-//ASSERT_EQ(expectedJson, actualJson);
-//}
-////TODO fix tests
-//
-//int main(int argc, char **argv) {
-//    testing::InitGoogleTest(&argc, argv);
-//    return RUN_ALL_TESTS();
-//}
+#include <gtest/gtest.h>
+#include "../include/blackjack.hpp"
+#include "../include/player.hpp"
+
+using namespace Blackjack;
+
+TEST(BlackjackGameTest, GameTest) {
+
+    BlackjackGame game;
+    
+    ASSERT_EQ(game.getGameState(), 0);      // game state is initialized with 0 ("game not started")
+    ASSERT_FALSE(game.start_round());       // cannot start a round with no players
+    ASSERT_TRUE(game.join("Player1", "password1"));     // players can join before game has started
+    ASSERT_EQ(game.getPlayers().size(), 1);      // players are added to the players list
+    ASSERT_TRUE(game.join("Player2", "password2"));      // second player can join
+    ASSERT_EQ(game.getPlayers().size(), 2);      // more players can join
+    ASSERT_FALSE(game.leave("Player2", "abcd"));        // valid credentials required to perform player operations
+    ASSERT_TRUE(game.leave("Player2", "password2"));      // player can leave with valid credentials
+    ASSERT_EQ(game.getPlayers().size(), 1);
+
+    game.join("Player2", "password2");
+    ASSERT_FALSE(game.place_bet("Player1", "password1", 10));       // placing bets not allowed before game has started
+    game.start_round();
+    ASSERT_EQ(game.getGameState(), 1);      // after starting round, game state is changed to 1 ("placing bets")
+    ASSERT_EQ(game.getTurn(), 0);       // the first player in the list must place a bet
+    ASSERT_FALSE(game.place_bet("Player2", "password2", 10));       // only players whose turn it is can take actions
+    game.place_bet("Player1", "password1", 10);
+    ASSERT_EQ(game.getPlayers()[0]._bet, 10);       // the bet is saved internally
+    game.place_bet("Player2", "password2", 20);
+
+
+}
+
+
+int main(int argc, char **argv) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
