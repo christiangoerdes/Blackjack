@@ -41,7 +41,7 @@ Im /Client Verzeichnis muss folgender Befehl zum Installieren der Abhängikeiten
 
 Im /Client Verzeichnis muss folgender Befehl zum Ausführen des Clients ausgeführt werden:
 
-    npm run
+    npm start
 
 ## Mitglieder
 
