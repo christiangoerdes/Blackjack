@@ -6,10 +6,12 @@
 
 namespace Blackjack {
 
+    // Player class
     class Player{
     public:
+        // Constructor
         Player(std::string name, std::string password, int init_balance);
-
+        // Attributes 
         std::string _name;
         std::string _password;
         int _balance;
