@@ -84,7 +84,7 @@ def get_dealer():
     }
 
 
-# Root query to get the current game-state
+# Root: endpoint to get the current game-state
 @api.get("/")
 async def root():
     return {
@@ -99,7 +99,7 @@ async def root():
 
 # Game State 0: Not Started
 
-# query to join the game
+# endpoint to join the game
 @api.get("/join")
 async def join(name: str, password: str):
     return {
@@ -107,7 +107,7 @@ async def join(name: str, password: str):
     }
 
 
-# query to leave the game
+# endpoint to leave the game
 @api.get("/leave")
 async def leave(name: str, password: str):
     return {
@@ -115,7 +115,7 @@ async def leave(name: str, password: str):
     }
 
 
-# query to start a round
+# endpoint to start a round
 @api.get("/start_round")
 async def start_round():
     return {
@@ -125,7 +125,7 @@ async def start_round():
 
 # Game State 1: Placing Bets
 
-# query to place a bet
+# endpoint to place a bet
 @api.get("/place_bet")
 async def place_bet(name: str, password: str, bet: int):
     return {
@@ -135,7 +135,7 @@ async def place_bet(name: str, password: str, bet: int):
 
 # Game State 2: Drawing Cards
 
-# query to draw a card
+# endpoint to draw a card
 @api.get("/draw")
 async def draw(name: str, password: str):
     return {
@@ -143,7 +143,7 @@ async def draw(name: str, password: str):
     }
 
 
-# query to skip drawing a card
+# endpoint to skip drawing a card
 @api.get("/skip")
 async def skip(name: str, password: str):
     return {
