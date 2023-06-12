@@ -1,0 +1,63 @@
+h2 {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #F5F5DC;
+}
+
+.debugging {
+    display: flex;
+    justify-content: center;
+}
+
+.ausgabe {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.ausgabe div {
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.game-info span {
+    display: block;
+}
+
+.player-info {
+    min-width: 40%;
+    max-width: 60%;
+}
+
+.players {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.player-info span {
+    display: block;
+}
+
+.player {
+    border: #F5F5DC 1px solid;
+    border-radius: 0.3rem;
+    
+    margin: 1rem 1rem;
+    padding: 1rem;
+}
+
+.dealer-info div {
+    margin-left: 0rem;
+    margin-right: 0rem;
+}
+
+.card {
+    border: 1px solid #F5F5DC;
+    border-radius: 0.3rem;
+    text-align: center;
+}
+
+.card span {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
