@@ -12,18 +12,19 @@ except ImportError as e:
     print(f"Exiting")
     exit(1)
 
-
 import os
 from fastapi import FastAPI
 import uvicorn
 from blackjack import BlackjackGame
 from fastapi.middleware.cors import CORSMiddleware
 
-
+# initialize game
 b = BlackjackGame()
 
+# initialize API
 api = FastAPI()
 
+# Enable access from other devices
 api.add_middleware(
     CORSMiddleware,
     allow_origins="*",
@@ -32,6 +33,8 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
+
+# returns the list of all players
 def get_players():
     players = b.getPlayers()
     players_list = []
@@ -48,6 +51,7 @@ def get_players():
     return players_list
 
 
+# returns the deck
 def get_deck():
     deck = b.getDeck()
     card_deck = []
@@ -60,6 +64,7 @@ def get_deck():
     return card_deck
 
 
+# returns the deck for a certain player
 def get_deck_for_player(player):
     card_deck = []
     for card in player._deck:
@@ -71,6 +76,7 @@ def get_deck_for_player(player):
     return card_deck
 
 
+# returns the dealer
 def get_dealer():
     return {
         "deck": get_deck_for_player(b.getDealer()),
@@ -78,8 +84,7 @@ def get_dealer():
     }
 
 
-# Game State 0: Not Started
-
+# Root query to get the current game-state
 @api.get("/")
 async def root():
     return {
@@ -92,6 +97,9 @@ async def root():
     }
 
 
+# Game State 0: Not Started
+
+# query to join the game
 @api.get("/join")
 async def join(name: str, password: str):
     return {
@@ -99,6 +107,7 @@ async def join(name: str, password: str):
     }
 
 
+# query to leave the game
 @api.get("/leave")
 async def leave(name: str, password: str):
     return {
@@ -106,24 +115,27 @@ async def leave(name: str, password: str):
     }
 
 
+# query to start a round
 @api.get("/start_round")
 async def start_round():
     return {
         "success": b.start_round()
     }
 
+
 # Game State 1: Placing Bets
 
-
+# query to place a bet
 @api.get("/place_bet")
 async def place_bet(name: str, password: str, bet: int):
     return {
         "success": b.place_bet(name, password, bet)
     }
 
+
 # Game State 2: Drawing Cards
 
-
+# query to draw a card
 @api.get("/draw")
 async def draw(name: str, password: str):
     return {
@@ -131,6 +143,7 @@ async def draw(name: str, password: str):
     }
 
 
+# query to skip drawing a card
 @api.get("/skip")
 async def skip(name: str, password: str):
     return {
