@@ -30,13 +30,15 @@ Um die API zu starten, muss einer der beiden folgenden Commands im `/Server/api`
 ---
 ## Client
 
-Make sure to have Node installed on your Computer.
+Um den Client zu nutzen, muss zuerst Node installiert werden.
 
-Run
+Im /Client Verzeichnis muss folgender Befehl zum Installieren der Abhängikeiten ausgeführt werden:
 
     npm install
 
-in the /Client folder to install dependencies
+Im /Client Verzeichnis muss folgender Befehl zum Ausführen des Clients ausgeführt werden:
+
+    npm run
 
 ## Mitglieder
 
