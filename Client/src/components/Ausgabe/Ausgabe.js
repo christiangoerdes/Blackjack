@@ -38,7 +38,9 @@ export default function Ausgabe() {
                 ? <span>You are currently in the Lobby. Wait for other Players and click "Start Round" when ready.</span> 
                 : gameState.gameState === 1 
                 ? <span>Time to place your bets {gameState.players[gameState.turn].name}!</span>
-                : <span>It's your turn, {gameState.players[gameState.turn].name}! Draw another card or skip</span>}
+                : gameState.gameState === 2 
+                ?<span>It's your turn, {gameState.players[gameState.turn].name}! Draw another card or skip</span>
+                : console.log()}
             </div>
             <div className="ausgabe">
                 <div className="game-info">
