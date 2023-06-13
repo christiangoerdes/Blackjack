@@ -35,18 +35,24 @@ Um die API zu starten, muss einer der beiden folgenden Commands im `/Server/api`
 
 Um den Client zu nutzen, muss zuerst Node installiert werden.
 
-Im `/Client` Verzeichnis muss in der axiosConfig die baseURL aktualisiert werden
+Anschließend muss im `/Client` Verzeichnis in der axiosConfig die baseURL auf den Server-host gestellt werden, den man nutzen möchte.
 
-Im `/Client` Verzeichnis muss folgender Befehl zum Installieren der Abhängikeiten ausgeführt werden:
+Zum Installieren der Abhängikeiten muss folgender Befehl im `/Client` Verzeichnis ausgeführt werden:
 
     npm install
 
-Im `/Client` Verzeichnis muss folgender Befehl zum Ausführen des Clients ausgeführt werden:
+Zum Starten des Clients muss folgender Befehl im `/Client` Verzeichnis ausgeführt werden:
 
     npm start
 
 ## Mitglieder
 
-- Ibrahim Fakhir        ~ Client 
-- Christian Goerdes     ~ API
-- Sergej Zuev           ~ Server
+- Ibrahim Fakhir        
+- Christian Goerdes    
+- Sergej Zuev          
+
+## Aufteilung 
+Das Projekt wurde so realisiert, dass Client und Server unabhängig von einander sind. Zum entwickeln wurde dabei der Server in die Spiellogik und API aufgeteilt. Die drei Bestandteile wurden im wesentlichen wie folgt aufgeteilt:
+- Client - Ibo
+- API - Chrisi     
+- Spiellogik - Sergej
