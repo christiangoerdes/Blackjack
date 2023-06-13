@@ -12,11 +12,13 @@
 Blackjack::BlackjackGame::BlackjackGame(){
     _init_balance = 1000;
     _game_state = 0;
+    _turn = 0;
 }
 
 Blackjack::BlackjackGame::BlackjackGame(int init_balance){
     _init_balance = init_balance;
     _game_state = 0;
+    _turn = 0
 }
 
 /// Game State 0: Not Started
