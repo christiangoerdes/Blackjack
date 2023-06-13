@@ -161,9 +161,9 @@ bool Blackjack::BlackjackGame::skip(std::string name, std::string password) {
 
         if (_turn == _players.size()) { // if all players have drawn their cards
             draw_dealer(); // dealer draws their cards
+            _game_state = 0; // set game state to "not started"
         }
 
-        _game_state = 0; // set game state to "not started"
     }
 
     return true;
