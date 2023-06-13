@@ -60,8 +60,11 @@ export default function Ausgabe() {
             </div>
             <div className="dealer-info">
                 <h2>Dealer</h2>
-                <span>Deck value: {gameState.dealer.deck.length !== 0 && gameState.dealer.deck_value}</span>
-                {gameState.dealer.deck.length !== 0 && gameState.dealer.deck.map((card, index) => 
+                <span>
+                    {/* Remove first expression to go into dealer debug mode */}
+                    {gameState.gameState === 0 && gameState.dealer.deck.length !== 0 && "Deck value: " + gameState.dealer.deck_value}
+                </span>
+                {gameState.gameState === 0 && gameState.dealer.deck.length !== 0 && gameState.dealer.deck.map((card, index) => 
                     <Card {...card} key={index} />
                 )}
             </div>
