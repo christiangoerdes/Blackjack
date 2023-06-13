@@ -106,14 +106,16 @@ bool Blackjack::BlackjackGame::place_bet(std::string name, std::string password,
         hand_card(dealer); // dealer gets two cards
         hand_card(dealer);
 
+        _turn = 0;
+
         if (players_left()) { // if there are any players who have not won immediately
             _game_state = 2; // set game state to "drawing cards"
+            _turn = next_player();
         }
         else {
             _game_state = 0; // set game state to "not started"
         }
-        _turn = 0;
-
+        
     }
     return true;
 }
