@@ -35,7 +35,7 @@ Um die API zu starten, muss einer der beiden folgenden Commands im `/Server/api`
 
 Um den Client zu nutzen, muss zuerst Node installiert werden.
 
-Im `/Client` Verzeichnis muss in der axiosConfig die baseURL aktualisiert werden !!!
+Im `/Client` Verzeichnis muss in der axiosConfig die baseURL aktualisiert werden
 
 Im `/Client` Verzeichnis muss folgender Befehl zum Installieren der Abhängikeiten ausgeführt werden:
 
