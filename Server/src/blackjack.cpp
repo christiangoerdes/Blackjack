@@ -110,7 +110,9 @@ bool Blackjack::BlackjackGame::place_bet(std::string name, std::string password,
 
         if (players_left()) { // if there are any players who have not won immediately
             _game_state = 2; // set game state to "drawing cards"
-            _turn = next_player();
+            while (!_players[_turn]._in_round) {
+                _turn++;
+            }
         }
         else {
             _game_state = 0; // set game state to "not started"
