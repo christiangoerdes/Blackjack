@@ -257,7 +257,6 @@ void Blackjack::BlackjackGame::reward(Player& winner) {
 }
 
 void Blackjack::BlackjackGame::lose(Player& loser) {
-    loser._balance -= loser._bet;
     loser._in_round = false;
 }
 
