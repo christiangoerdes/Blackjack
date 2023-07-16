@@ -1,7 +1,7 @@
 # Blackjack - Uni Projekt 2
 
 ## Projektdetails
-[Implementationsdetails](https://gitlab.informatik.uni-bonn.de/xx_best_oose_group_xx/projektbeta/-/blob/e2ffaa9738465814f7dee422b9db3b628f47ad4c/docs/Implementation%20Details/implementation_details.drawio.png)
+[Implementationsdetails](https://github.com/christiangoerdes/Blackjack/blob/adbfea407bc6ebaf35a4ef6756ab3f50e6e726c8/docs/Implementation%20Details/implementation_details.drawio.png)
 
 ## Server mit Docker starten
 Um den Server mit Docker zu starten, muss man Docker auf seinem Gerät konfiguriert haben. Anschließend  müssen die folgenden Commands im `/Server` Verzeichnis ausgeführt werden:
