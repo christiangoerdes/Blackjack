@@ -1,7 +1,6 @@
 # Blackjack
 
-## Project Details
-[Implementationsdetails](https://github.com/christiangoerdes/Blackjack/blob/adbfea407bc6ebaf35a4ef6756ab3f50e6e726c8/docs/Implementation%20Details/implementation_details.drawio.png)
+
 
 ## Server
 ### Starting the Server with Docker
@@ -46,3 +45,6 @@ To start the client, run the following command in the `/Client` directory:
 ```
 npm start
 ```
+
+## Project Details
+[Implementationsdetails](https://github.com/christiangoerdes/Blackjack/blob/adbfea407bc6ebaf35a4ef6756ab3f50e6e726c8/docs/Implementation%20Details/implementation_details.drawio.png)
