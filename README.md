@@ -1,11 +1,13 @@
 # Blackjack
 
-
+## General Information
+This project is a collaborative effort developed as part of the Object-Oriented Software Development module.
+It consists of a client implemented in React and a server implemented using Python, C++, and Pybind.
+The communication between the client and server operates using the REST architecture.
 
 ## Server
 ### Starting the Server with Docker
 To start the server using Docker, you need to have Docker configured on your device. Afterward, execute the following commands in the `/Server` directory:
-
 
 Build the container:
 ```
