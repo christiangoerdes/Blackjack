@@ -3,7 +3,8 @@
 ## Project Details
 [Implementationsdetails](https://github.com/christiangoerdes/Blackjack/blob/adbfea407bc6ebaf35a4ef6756ab3f50e6e726c8/docs/Implementation%20Details/implementation_details.drawio.png)
 
-## Starting the Server with Docker
+## Server
+### Starting the Server with Docker
 To start the server using Docker, you need to have Docker configured on your device. Afterward, execute the following commands in the `/Server` directory:
 
 
@@ -16,13 +17,13 @@ Start the container:
 sudo docker run --network host blackjack_api
 ```
 
-## Starting the Server without Docker
-### Creating a Build:
+### Starting the Server without Docker
+#### Creating a Build:
 To create a build, enter the following command in the `/Server` directory of the project:
     
     cmake -S . -B build && cmake --build build && cmake --install build
 
-### Starting the API:
+#### Starting the API:
 To start the API, execute one of the following commands in the `/Server/api` directory:
 ```
     uvicorn api:api --port 8000 --reload
