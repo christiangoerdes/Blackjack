@@ -1,58 +1,47 @@
-# Blackjack - Uni Projekt 2
+# Blackjack
 
-## Projektdetails
+## Project Details
 [Implementationsdetails](https://github.com/christiangoerdes/Blackjack/blob/adbfea407bc6ebaf35a4ef6756ab3f50e6e726c8/docs/Implementation%20Details/implementation_details.drawio.png)
 
-## Server mit Docker starten
-Um den Server mit Docker zu starten, muss man Docker auf seinem Gerät konfiguriert haben. Anschließend  müssen die folgenden Commands im `/Server` Verzeichnis ausgeführt werden:
+## Starting the Server with Docker
+To start the server using Docker, you need to have Docker configured on your device. Afterward, execute the following commands in the `/Server` directory:
 
 
-Container bauen:
+Build the container:
+```
+sudo docker build -t blackjack_api .
+```
+Start the container:
+```
+sudo docker run --network host blackjack_api
+```
 
-    sudo docker build -t blackjack_api .
-
-Container starten:
-
-    sudo docker run --network host blackjack_api
-
-
-## Server ohne Docker starten
-### Build erstellen:
-Um einen Build zu erstellen, muss der folgende Command im `/Server` Verzeichnis des Projekts eingegeben werden:
+## Starting the Server without Docker
+### Creating a Build:
+To create a build, enter the following command in the `/Server` directory of the project:
     
     cmake -S . -B build && cmake --build build && cmake --install build
 
-### API starten:
-Um die API zu starten, muss einer der beiden folgenden Commands im `/Server/api` Verzeichnis ausgeführt werden:
-
+### Starting the API:
+To start the API, execute one of the following commands in the `/Server/api` directory:
+```
     uvicorn api:api --port 8000 --reload
- ###
-
+```
+```
     python3 -m uvicorn api:api --port 8000  --reload
-
+```
 ---
 ## Client
 
-Um den Client zu nutzen, muss zuerst Node installiert werden.
+To use the client, you first need to install Node.js.
 
-Anschließend muss im `/Client` Verzeichnis in der axiosConfig die baseURL auf den Server-host gestellt werden, den man nutzen möchte.
+Next, in the axiosConfig file located in the `/Client directory`, set the baseURL to the server host you want to use.
 
-Zum Installieren der Abhängikeiten muss folgender Befehl im `/Client` Verzeichnis ausgeführt werden:
-
-    npm install
-
-Zum Starten des Clients muss folgender Befehl im `/Client` Verzeichnis ausgeführt werden:
-
-    npm start
-
-## Mitglieder
-
-- Ibrahim Fakhir        
-- Christian Goerdes    
-- Sergej Zuev          
-
-## Aufteilung 
-Das Projekt wurde so realisiert, dass Client und Server unabhängig von einander sind. Zum Entwickeln wurde dabei der Server in die Spiellogik und API aufgeteilt. Die drei Bestandteile wurden im wesentlichen wie folgt aufgeteilt:
-- Client - Ibo
-- API - Chrisi     
-- Spiellogik - Sergej
+To install dependencies, run the following command in the `/Client` directory:
+```
+npm install
+```
+To start the client, run the following command in the `/Client` directory:
+```
+npm start
+```
