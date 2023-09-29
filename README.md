@@ -37,7 +37,7 @@ To start the API, execute one of the following commands in the `/Server/api` dir
 
 To use the client, you first need to install Node.js.
 
-Next, in the axiosConfig file located in the `/Client directory`, set the baseURL to the server host you want to use.
+Next, in the axiosConfig file located in the `/Client` directory, set the baseURL to the server host you want to use.
 
 To install dependencies, run the following command in the `/Client` directory:
 ```
@@ -49,4 +49,4 @@ npm start
 ```
 
 ## Project Details
-[Implementationsdetails](https://github.com/christiangoerdes/Blackjack/blob/adbfea407bc6ebaf35a4ef6756ab3f50e6e726c8/docs/Implementation%20Details/implementation_details.drawio.png)
+[Implementations Details](https://github.com/christiangoerdes/Blackjack/blob/adbfea407bc6ebaf35a4ef6756ab3f50e6e726c8/docs/Implementation%20Details/implementation_details.drawio.png)
